@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Locataire extends Model
+{
+    protected $fillable = [
+        'nom',
+        'prenom',
+        'telephone',
+        'email',
+        'adresse',
+        'piece_identite',
+        'photo'
+    ];
+}
