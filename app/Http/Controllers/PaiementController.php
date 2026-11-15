@@ -11,7 +11,9 @@ class PaiementController extends Controller
 {
     public function index()
     {
-        $paiements = Paiement::with('occupation')->get();
+        $paiements = Paiement::with([
+            'occupation'
+        ])->get();
 
         return view(
             'paiements.index',
@@ -42,10 +44,30 @@ class PaiementController extends Controller
             abort(403);
         }
 
-        Paiement::create($request->all());
+        $request->validate([
+            'occupation_id' => 'required',
+            'date_paiement' => 'required|date',
+            'montant' => 'required|numeric',
+        ]);
+
+        Paiement::create(
+            $request->all()
+        );
 
         return redirect()
-            ->route('paiements.index');
+            ->route('paiements.index')
+            ->with(
+                'success',
+                'Paiement enregistré avec succès.'
+            );
+    }
+
+    public function show(Paiement $paiement)
+    {
+        return view(
+            'paiements.show',
+            compact('paiement')
+        );
     }
 
     public function edit(Paiement $paiement)
@@ -54,43 +76,74 @@ class PaiementController extends Controller
             abort(403);
         }
 
+        $occupations = Occupation::with([
+            'bien',
+            'locataire'
+        ])->get();
+
         return view(
             'paiements.edit',
-            compact('paiement')
+            compact(
+                'paiement',
+                'occupations'
+            )
         );
     }
 
     public function update(
         Request $request,
         Paiement $paiement
-    )
-    {
+    ) {
         if (auth()->user()->role == 'Consultation') {
             abort(403);
         }
+
+        $request->validate([
+            'occupation_id' => 'required',
+            'date_paiement' => 'required|date',
+            'montant' => 'required|numeric',
+        ]);
 
         $paiement->update(
             $request->all()
         );
 
         return redirect()
-            ->route('paiements.index');
+            ->route('paiements.index')
+            ->with(
+                'success',
+                'Paiement modifié avec succès.'
+            );
     }
 
     public function destroy(Paiement $paiement)
     {
-        if (auth()->user()->role != 'Administrateur') {
+        if (
+            auth()->user()->role !=
+            'Administrateur'
+        ) {
             abort(403);
         }
 
         $paiement->delete();
 
         return redirect()
-            ->route('paiements.index');
+            ->route('paiements.index')
+            ->with(
+                'success',
+                'Paiement supprimé avec succès.'
+            );
     }
 
-    public function recu(Paiement $paiement)
-    {
+    /*
+    |--------------------------------------------------------------------------
+    | REÇU PDF
+    |--------------------------------------------------------------------------
+    */
+
+    public function recu(
+        Paiement $paiement
+    ) {
         $occupation = Occupation::with([
             'locataire',
             'bien'
@@ -108,7 +161,12 @@ class PaiementController extends Controller
 
         return $pdf->download(
             'Recu-' .
-            $paiement->id .
+            str_pad(
+                $paiement->id,
+                6,
+                '0',
+                STR_PAD_LEFT
+            ) .
             '.pdf'
         );
     }

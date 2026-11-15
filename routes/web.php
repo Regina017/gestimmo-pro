@@ -13,6 +13,8 @@ use App\Http\Controllers\RapportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\ApprobationController;
+use App\Http\Controllers\EcheancierController;
+use App\Http\Controllers\RechercheController;
 
 Route::get('/', function () {
     return redirect('/dashboard');
@@ -29,6 +31,11 @@ Route::resource('occupations', OccupationController::class);
 
 Route::resource('paiements', PaiementController::class);
 
+Route::get(
+    '/paiements/{paiement}/recu',
+    [PaiementController::class, 'recu']
+)->name('paiements.recu');
+
 Route::resource('depenses', DepenseController::class);
 
 Route::get('/caisse', [CaisseController::class, 'index'])
@@ -39,27 +46,61 @@ Route::get('/rapports', [RapportController::class, 'index'])
 
 /*
 |--------------------------------------------------------------------------
+| ÉCHÉANCIER
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/echeancier',
+    [EcheancierController::class, 'index']
+)->name('echeancier.index');
+
+/*
+|--------------------------------------------------------------------------
+| RECHERCHE GLOBALE
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/recherche',
+    [RechercheController::class, 'index']
+)->name('recherche.index');
+
+/*
+|--------------------------------------------------------------------------
 | RAPPORTS PDF
 |--------------------------------------------------------------------------
 */
 
-Route::get('/rapports/biens/pdf', [RapportController::class, 'biensPdf'])
-    ->name('rapports.biens.pdf');
+Route::get(
+    '/rapports/biens/pdf',
+    [RapportController::class, 'biensPdf']
+)->name('rapports.biens.pdf');
 
-Route::get('/rapports/locataires/pdf', [RapportController::class, 'locatairesPdf'])
-    ->name('rapports.locataires.pdf');
+Route::get(
+    '/rapports/locataires/pdf',
+    [RapportController::class, 'locatairesPdf']
+)->name('rapports.locataires.pdf');
 
-Route::get('/rapports/occupations/pdf', [RapportController::class, 'occupationsPdf'])
-    ->name('rapports.occupations.pdf');
+Route::get(
+    '/rapports/occupations/pdf',
+    [RapportController::class, 'occupationsPdf']
+)->name('rapports.occupations.pdf');
 
-Route::get('/rapports/paiements/pdf', [RapportController::class, 'paiementsPdf'])
-    ->name('rapports.paiements.pdf');
+Route::get(
+    '/rapports/paiements/pdf',
+    [RapportController::class, 'paiementsPdf']
+)->name('rapports.paiements.pdf');
 
-Route::get('/rapports/depenses/pdf', [RapportController::class, 'depensesPdf'])
-    ->name('rapports.depenses.pdf');
+Route::get(
+    '/rapports/depenses/pdf',
+    [RapportController::class, 'depensesPdf']
+)->name('rapports.depenses.pdf');
 
-Route::get('/rapports/caisse/pdf', [RapportController::class, 'caissePdf'])
-    ->name('rapports.caisse.pdf');
+Route::get(
+    '/rapports/caisse/pdf',
+    [RapportController::class, 'caissePdf']
+)->name('rapports.caisse.pdf');
 
 /*
 |--------------------------------------------------------------------------
@@ -67,17 +108,25 @@ Route::get('/rapports/caisse/pdf', [RapportController::class, 'caissePdf'])
 |--------------------------------------------------------------------------
 */
 
-Route::get('/rapports/biens/excel', [RapportController::class, 'biensExcel'])
-    ->name('rapports.biens.excel');
+Route::get(
+    '/rapports/biens/excel',
+    [RapportController::class, 'biensExcel']
+)->name('rapports.biens.excel');
 
-Route::get('/rapports/locataires/excel', [RapportController::class, 'locatairesExcel'])
-    ->name('rapports.locataires.excel');
+Route::get(
+    '/rapports/locataires/excel',
+    [RapportController::class, 'locatairesExcel']
+)->name('rapports.locataires.excel');
 
-Route::get('/rapports/paiements/excel', [RapportController::class, 'paiementsExcel'])
-    ->name('rapports.paiements.excel');
+Route::get(
+    '/rapports/paiements/excel',
+    [RapportController::class, 'paiementsExcel']
+)->name('rapports.paiements.excel');
 
-Route::get('/rapports/depenses/excel', [RapportController::class, 'depensesExcel'])
-    ->name('rapports.depenses.excel');
+Route::get(
+    '/rapports/depenses/excel',
+    [RapportController::class, 'depensesExcel']
+)->name('rapports.depenses.excel');
 
 /*
 |--------------------------------------------------------------------------

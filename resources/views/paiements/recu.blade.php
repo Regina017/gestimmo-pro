@@ -1,30 +1,95 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 
 <head>
+    <meta charset="UTF-8">
 
-    <meta charset="utf-8">
-
-    <title>Reçu</title>
+    <title>Reçu de paiement</title>
 
     <style>
 
         body {
-            font-family: Arial, sans-serif;
+            font-family: DejaVu Sans, sans-serif;
+            margin: 30px;
+            color: #333;
+            font-size: 14px;
         }
 
-        h1 {
+        .header {
             text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: 220px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .title {
+            font-size: 30px;
+            font-weight: bold;
+            color: #198754;
+            margin-bottom: 5px;
+        }
+
+        .company {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .description {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 15px;
+        }
+
+        .receipt-number {
+            display: inline-block;
+            padding: 8px 15px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            font-weight: bold;
+            color: #444;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 30px;
         }
 
         td {
-            border: 1px solid #ccc;
-            padding: 10px;
+            border: 1px solid #ddd;
+            padding: 12px;
+        }
+
+        .label {
+            width: 35%;
+            background: #f5f5f5;
+            font-weight: bold;
+        }
+
+        .success {
+            color: #198754;
+            font-weight: bold;
+        }
+
+        .warning {
+            color: #fd7e14;
+            font-weight: bold;
+        }
+
+        .signature {
+            margin-top: 70px;
+        }
+
+        .footer {
+            margin-top: 70px;
+            text-align: center;
+            color: #777;
+            font-size: 12px;
         }
 
     </style>
@@ -33,39 +98,129 @@
 
 <body>
 
-<h1>REÇU DE PAIEMENT</h1>
+    <div class="header">
 
-<p>
-    N° REC-{{ str_pad($paiement->id, 6, '0', STR_PAD_LEFT) }}
-</p>
+        @php
+            $logo = public_path('images/logo.png');
+        @endphp
 
-<table>
+        @if(file_exists($logo))
 
-    <tr>
-        <td>Locataire</td>
-        <td>{{ $occupation->locataire->nom ?? '' }}</td>
-    </tr>
+            <img
+                src="{{ $logo }}"
+                alt="Logo"
+                class="logo"
+            >
 
-    <tr>
-        <td>Bien</td>
-        <td>{{ $occupation->bien->reference ?? '' }}</td>
-    </tr>
+        @endif
 
-    <tr>
-        <td>Date</td>
-        <td>{{ $paiement->date_paiement }}</td>
-    </tr>
+        <div class="title">
+            REÇU DE PAIEMENT
+        </div>
 
-    <tr>
-        <td>Montant</td>
-        <td>{{ number_format($paiement->montant, 2) }} $</td>
-    </tr>
+        <div class="company">
+            BÂTIMENTS MATHE SÉBASTIEN
+        </div>
 
-</table>
+        <div class="description">
+            Gestion Immobilière Professionnelle
+        </div>
 
-<br><br>
+        <div class="receipt-number">
+            N° REC-{{ str_pad($paiement->id, 6, '0', STR_PAD_LEFT) }}
+        </div>
 
-Signature : __________________________
+    </div>
+
+    <table>
+
+        <tr>
+            <td class="label">Locataire</td>
+            <td>
+                {{ $occupation->locataire->nom ?? 'Non disponible' }}
+            </td>
+        </tr>
+
+        <tr>
+            <td class="label">Bien</td>
+            <td>
+                {{ $occupation->bien->reference ?? 'Non disponible' }}
+            </td>
+        </tr>
+
+        <tr>
+            <td class="label">Date du paiement</td>
+            <td>
+                {{ \Carbon\Carbon::parse($paiement->date_paiement)->format('d/m/Y') }}
+            </td>
+        </tr>
+
+        <tr>
+            <td class="label">Montant payé</td>
+            <td>
+                {{ number_format($paiement->montant, 2) }} $
+            </td>
+        </tr>
+
+        <tr>
+            <td class="label">Reste à payer</td>
+            <td>
+                {{ number_format($paiement->reste, 2) }} $
+            </td>
+        </tr>
+
+        <tr>
+            <td class="label">Statut</td>
+
+            <td>
+
+                @if($paiement->reste > 0)
+
+                    <span class="warning">
+                        Paiement partiel
+                    </span>
+
+                @else
+
+                    <span class="success">
+                        Paiement complet
+                    </span>
+
+                @endif
+
+            </td>
+
+        </tr>
+
+    </table>
+
+    <div class="signature">
+
+        Je soussigné confirme avoir reçu le montant indiqué ci-dessus.
+
+        <br><br><br>
+
+        Signature :
+
+        ________________________________________
+
+    </div>
+
+    <div class="footer">
+
+        <strong>BÂTIMENTS MATHE SÉBASTIEN</strong>
+
+        <br>
+
+        GESTIMMO PRO v1.3
+
+        <br><br>
+
+        Reçu généré automatiquement le
+
+        {{ now()->format('d/m/Y à H:i') }}
+
+    </div>
 
 </body>
 
