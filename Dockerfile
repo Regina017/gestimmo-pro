@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     zip \
     libzip-dev \
+    libpq-dev \
     libpng-dev \
     libjpeg62-turbo-dev \
     libfreetype6-dev
@@ -12,8 +13,9 @@ RUN apt-get update && apt-get install -y \
 RUN docker-php-ext-install \
     pdo \
     pdo_mysql \
-    zip \
-    gd
+    pdo_pgsql \
+    pgsql \
+    zip
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -21,7 +23,7 @@ WORKDIR /var/www
 
 COPY . .
 
-RUN composer install --no-dev --optimize-autoloader --ignore-platform-req=ext-gd
+RUN composer install --no-dev --optimize-autoloader
 
 EXPOSE 10000
 
