@@ -238,15 +238,14 @@
 
                 </div>
 
-                <a href="#"
-                   class="forgot-link"
-                   onclick="return false;">
+      <a href="{{ route('password.request') }}"
+   class="forgot-link">
 
-                    <i class="fas fa-key"></i>
+    <i class="fas fa-key"></i>
 
-                    Mot de passe oublié (bientôt disponible)
+    Mot de passe oublié ?
 
-                </a>
+</a>
 
             </div>
 

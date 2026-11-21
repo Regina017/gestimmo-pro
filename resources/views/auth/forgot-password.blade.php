@@ -1,138 +1,63 @@
-<!DOCTYPE html>
-<html lang="fr">
+@extends('layouts.app')
 
-<head>
+@section('content')
 
-    <meta charset="UTF-8">
+<div class="container">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <div class="row justify-content-center">
 
-    <title>Mot de passe oublié | Gestimmo‑Pro</title>
+        <div class="col-md-6">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet">
+            <div class="card shadow">
 
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+                <div class="card-header">
 
-    <style>
+                    Mot de passe oublié
 
-        body{
-            min-height:100vh;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            background:linear-gradient(
-                135deg,
-                #0f172a,
-                #1e3a8a,
-                #2563eb
-            );
-            font-family:"Segoe UI",sans-serif;
-        }
+                </div>
 
-        .card-reset{
-            width:100%;
-            max-width:500px;
-            border:none;
-            border-radius:20px;
-            overflow:hidden;
-            box-shadow:0 20px 40px rgba(0,0,0,.25);
-        }
+                <div class="card-body">
 
-        .header{
-            background:#2563eb;
-            color:white;
-            text-align:center;
-            padding:30px;
-        }
+                    @if(session('status'))
 
-        .body-card{
-            padding:30px;
-            background:white;
-        }
+                        <div class="alert alert-success">
 
-    </style>
+                            {{ session('status') }}
 
-</head>
+                        </div>
 
-<body>
+                    @endif
 
-<div class="card card-reset">
+                    <form method="POST"
+                          action="{{ route('password.email') }}">
 
-    <div class="header">
+                        @csrf
 
-        <h3>
-            <i class="fas fa-key"></i>
-            Mot de passe oublié
-        </h3>
+                        <div class="mb-3">
 
-        <small>
-            Gestimmo‑Pro
-        </small>
+                            <label>Email</label>
 
-    </div>
+                            <input
+                                type="email"
+                                name="email"
+                                class="form-control"
+                                required>
 
-    <div class="body-card">
+                        </div>
 
-        @if (session('status'))
+                        <button
+                            type="submit"
+                            class="btn btn-primary">
 
-            <div class="alert alert-success">
+                            Envoyer le lien
 
-                {{ session('status') }}
+                        </button>
+
+                    </form>
+
+                </div>
 
             </div>
-
-        @endif
-
-        <p class="text-muted">
-
-            Entrez votre adresse e‑mail.
-            Un lien de réinitialisation sera envoyé.
-
-        </p>
-
-        <form method="POST"
-              action="{{ route('password.email') }}">
-
-            @csrf
-
-            <div class="mb-3">
-
-                <label class="form-label">
-
-                    Adresse E‑mail
-
-                </label>
-
-                <input
-                    type="email"
-                    name="email"
-                    class="form-control"
-                    required>
-
-            </div>
-
-            <button
-                type="submit"
-                class="btn btn-primary w-100">
-
-                <i class="fas fa-paper-plane"></i>
-
-                Envoyer le lien
-
-            </button>
-
-        </form>
-
-        <div class="text-center mt-3">
-
-            <a href="{{ route('login') }}">
-
-                Retour connexion
-
-            </a>
 
         </div>
 
@@ -140,6 +65,4 @@
 
 </div>
 
-</body>
-
-</html>
+@endsection

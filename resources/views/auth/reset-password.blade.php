@@ -1,155 +1,86 @@
-<!DOCTYPE html>
-<html lang="fr">
+@extends('layouts.app')
 
-<head>
+@section('content')
 
-    <meta charset="UTF-8">
+<div class="container">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <div class="row justify-content-center">
 
-    <title>Réinitialisation | Gestimmo‑Pro</title>
+        <div class="col-md-6">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet">
+            <div class="card shadow">
 
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+                <div class="card-header">
 
-    <style>
+                    Réinitialisation
 
-        body{
-            min-height:100vh;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            background:linear-gradient(
-                135deg,
-                #0f172a,
-                #1e3a8a,
-                #2563eb
-            );
-            font-family:"Segoe UI",sans-serif;
-        }
+                </div>
 
-        .card-reset{
-            width:100%;
-            max-width:550px;
-            border:none;
-            border-radius:20px;
-            overflow:hidden;
-            box-shadow:0 20px 40px rgba(0,0,0,.25);
-        }
+                <div class="card-body">
 
-        .header{
-            background:#16a34a;
-            color:white;
-            text-align:center;
-            padding:30px;
-        }
+                    <form method="POST"
+                          action="{{ route('password.store') }}">
 
-        .body-card{
-            background:white;
-            padding:30px;
-        }
+                        @csrf
 
-    </style>
+                        <input
+                            type="hidden"
+                            name="token"
+                            value="{{ request()->route('token') }}">
 
-</head>
+                        <div class="mb-3">
 
-<body>
+                            <label>Email</label>
 
-<div class="card card-reset">
+                            <input
+                                type="email"
+                                name="email"
+                                class="form-control"
+                                required>
 
-    <div class="header">
+                        </div>
 
-        <h3>
+                        <div class="mb-3">
 
-            <i class="fas fa-lock"></i>
+                            <label>Nouveau mot de passe</label>
 
-            Nouveau mot de passe
+                            <input
+                                type="password"
+                                name="password"
+                                class="form-control"
+                                required>
 
-        </h3>
+                        </div>
 
-    </div>
+                        <div class="mb-3">
 
-    <div class="body-card">
+                            <label>Confirmation</label>
 
-        <form method="POST"
-              action="{{ route('password.store') }}">
+                            <input
+                                type="password"
+                                name="password_confirmation"
+                                class="form-control"
+                                required>
 
-            @csrf
+                        </div>
 
-            <input
-                type="hidden"
-                name="token"
-                value="{{ $request->route('token') }}">
+                        <button
+                            class="btn btn-success">
 
-            <div class="mb-3">
+                            Réinitialiser
 
-                <label>
+                        </button>
 
-                    Adresse E‑mail
+                    </form>
 
-                </label>
-
-                <input
-                    type="email"
-                    name="email"
-                    value="{{ old('email', $request->email) }}"
-                    class="form-control"
-                    required>
+                </div>
 
             </div>
 
-            <div class="mb-3">
-
-                <label>
-
-                    Nouveau mot de passe
-
-                </label>
-
-                <input
-                    type="password"
-                    name="password"
-                    class="form-control"
-                    required>
-
-            </div>
-
-            <div class="mb-3">
-
-                <label>
-
-                    Confirmation
-
-                </label>
-
-                <input
-                    type="password"
-                    name="password_confirmation"
-                    class="form-control"
-                    required>
-
-            </div>
-
-            <button
-                type="submit"
-                class="btn btn-success w-100">
-
-                <i class="fas fa-check"></i>
-
-                Réinitialiser le mot de passe
-
-            </button>
-
-        </form>
+        </div>
 
     </div>
 
 </div>
 
-</body>
-
-</html>
+@endsection

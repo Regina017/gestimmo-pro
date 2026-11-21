@@ -104,49 +104,125 @@
 
     </div>
 
-    <div class="row g-4 mt-2">
+  <div class="row g-4 mt-2">
 
-        <div class="col-lg-4">
-            <div class="card shadow border-0 bg-danger text-white">
-                <div class="card-body text-center">
-                    <h5>🔴 Impayés</h5>
-                    <h1>{{ $impayes }}</h1>
-                </div>
-            </div>
-        </div>
+    <div class="col-lg-3">
 
-        <div class="col-lg-4">
-            <div class="card shadow border-0 bg-warning">
-                <div class="card-body text-center">
-                    <h5>⚠ Contrats expirants</h5>
-                    <h1>{{ $contratsExpirants }}</h1>
-                </div>
-            </div>
-        </div>
+        <div class="card shadow border-0 bg-danger text-white">
 
-        <div class="col-lg-4">
-            <div class="card shadow border-0 bg-info text-white">
-                <div class="card-body text-center">
-                    <h5>🏠 Logements libres</h5>
-                    <h1>{{ $logementsVacants }}</h1>
-                </div>
+            <div class="card-body text-center">
+
+                <h5>🔴 Impayés</h5>
+
+                <h1>{{ $impayes }}</h1>
+
             </div>
+
         </div>
 
     </div>
 
-    <div class="row mt-5">
+    <div class="col-lg-3">
 
-        <div class="col-lg-4 mb-4">
-            <div class="card shadow border-0">
-                <div class="card-header bg-success text-white">
-                    Revenus / Dépenses
-                </div>
-                <div class="card-body">
-                    <canvas id="revenusDepensesChart"></canvas>
-                </div>
+        <div class="card shadow border-0 bg-warning">
+
+            <div class="card-body text-center">
+
+                <h5>⚠ Contrats expirants</h5>
+
+                <h1>{{ $contratsExpirants }}</h1>
+
             </div>
+
         </div>
+
+    </div>
+
+    <div class="col-lg-3">
+
+        <div class="card shadow border-0 bg-info text-white">
+
+            <div class="card-body text-center">
+
+                <h5>🏠 Logements libres</h5>
+
+                <h1>{{ $logementsVacants }}</h1>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3">
+
+        <div class="card shadow border-0 bg-secondary text-white">
+
+            <div class="card-body text-center">
+
+                <h5>⏳ Échéances 7 jours</h5>
+
+                <h1>{{ $echeancesLoyer }}</h1>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row g-4 mt-3">
+
+    <div class="col-lg-12">
+
+        <div class="card shadow border-0 border-start border-5 border-danger">
+
+            <div class="card-body text-center">
+
+                <h4 class="text-danger fw-bold">
+
+                    🚨 Contrats expirés / en retard
+
+                </h4>
+
+                <h1 class="display-4">
+
+                    {{ $contratsEnRetard }}
+
+                </h1>
+
+                <p class="text-muted mb-0">
+
+                    Contrats nécessitant une intervention
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row mt-5">
+
+    <div class="col-lg-4 mb-4">
+
+        <div class="card shadow border-0">
+
+            <div class="card-header bg-success text-white">
+                Revenus / Dépenses
+            </div>
+
+            <div class="card-body">
+                <canvas id="revenusDepensesChart"></canvas>
+            </div>
+
+        </div>
+
+    </div>
 
         <div class="col-lg-4 mb-4">
             <div class="card shadow border-0">

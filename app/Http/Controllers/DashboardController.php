@@ -28,7 +28,10 @@ class DashboardController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $contratsActifs = Contrat::where('statut', 'Actif')->get();
+        $contratsActifs = Contrat::where(
+            'statut',
+            'Actif'
+        )->get();
 
         $nbContrats = $contratsActifs->count();
 
@@ -39,7 +42,12 @@ class DashboardController extends Controller
         */
 
         $logementsOccupes = $nbContrats;
-        $logementsLibres = max(0, $nbLogements - $logementsOccupes);
+
+        $logementsLibres =
+            max(
+                0,
+                $nbLogements - $logementsOccupes
+            );
 
         /*
         |--------------------------------------------------------------------------
@@ -63,7 +71,8 @@ class DashboardController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $loyersAttendus = $contratsActifs->sum('loyer');
+        $loyersAttendus =
+            $contratsActifs->sum('loyer');
 
         /*
         |--------------------------------------------------------------------------
@@ -89,7 +98,7 @@ class DashboardController extends Controller
                 )
                 ->first();
 
-            if (!$paiement) {
+            if (! $paiement) {
                 $impayes++;
             }
         }
@@ -114,6 +123,47 @@ class DashboardController extends Controller
 
         /*
         |--------------------------------------------------------------------------
+        | NOUVEAU V1.2
+        | Échéances dans les 7 jours
+        |--------------------------------------------------------------------------
+        */
+
+        $echeancesLoyer = Contrat::where(
+                'statut',
+                'Actif'
+            )
+            ->whereDate(
+                'date_fin',
+                '<=',
+                now()->addDays(7)
+            )
+            ->whereDate(
+                'date_fin',
+                '>=',
+                now()
+            )
+            ->count();
+
+        /*
+        |--------------------------------------------------------------------------
+        | NOUVEAU V1.2
+        | Contrats expirés
+        |--------------------------------------------------------------------------
+        */
+
+        $contratsEnRetard = Contrat::where(
+                'statut',
+                'Actif'
+            )
+            ->whereDate(
+                'date_fin',
+                '<',
+                now()
+            )
+            ->count();
+
+        /*
+        |--------------------------------------------------------------------------
         | Paiements récents
         |--------------------------------------------------------------------------
         */
@@ -130,10 +180,10 @@ class DashboardController extends Controller
 
         $revenus = $revenusMois;
 
-        // Mettre la vraie somme des dépenses plus tard
         $depenses = 0;
 
-        $benefice = $revenus - $depenses;
+        $benefice =
+            $revenus - $depenses;
 
         /*
         |--------------------------------------------------------------------------
@@ -144,11 +194,13 @@ class DashboardController extends Controller
         $totalNotifications =
             $impayes
             + $contratsExpirant->count()
-            + $logementsLibres;
+            + $logementsLibres
+            + $echeancesLoyer
+            + $contratsEnRetard;
 
         /*
         |--------------------------------------------------------------------------
-        | Données Graphique Impayés
+        | Graphique impayés
         |--------------------------------------------------------------------------
         */
 
@@ -174,48 +226,73 @@ class DashboardController extends Controller
                     )
                     ->first();
 
-                if (!$paiementMois) {
+                if (! $paiementMois) {
+
                     $nbImpayesMois++;
                 }
             }
 
-            $impayesParMois[] = $nbImpayesMois;
+            $impayesParMois[] =
+                $nbImpayesMois;
         }
 
-        return view('dashboard.index', [
+        return view(
+            'dashboard.index',
+            [
 
-            // Cartes
-            'totalBiens' => $nbLogements,
-            'totalLocataires' => $nbLocataires,
-            'totalImmeubles' => $nbImmeubles,
-            'totalContrats' => $nbContrats,
+                'totalBiens' => $nbLogements,
+                'totalLocataires' => $nbLocataires,
+                'totalImmeubles' => $nbImmeubles,
+                'totalContrats' => $nbContrats,
 
-            'revenus' => $revenus,
-            'depenses' => $depenses,
-            'benefice' => $benefice,
+                'revenus' => $revenus,
+                'depenses' => $depenses,
+                'benefice' => $benefice,
 
-            'impayes' => $impayes,
+                'impayes' => $impayes,
 
-            'contratsExpirants' => $contratsExpirant->count(),
+                'contratsExpirants' =>
+                    $contratsExpirant->count(),
 
-            'logementsVacants' => $logementsLibres,
+                'logementsVacants' =>
+                    $logementsLibres,
 
-            'totalNotifications' => $totalNotifications,
+                'totalNotifications' =>
+                    $totalNotifications,
 
-            // Détails
-            'nbLocataires' => $nbLocataires,
-            'nbLogements' => $nbLogements,
-            'nbImmeubles' => $nbImmeubles,
-            'nbContrats' => $nbContrats,
+                'echeancesLoyer' =>
+                    $echeancesLoyer,
 
-            'revenusMois' => $revenusMois,
-            'loyersAttendus' => $loyersAttendus,
+                'contratsEnRetard' =>
+                    $contratsEnRetard,
 
-            'paiementsRecents' => $paiementsRecents,
-            'contratsExpirantListe' => $contratsExpirant,
+                'nbLocataires' =>
+                    $nbLocataires,
 
-            // Graphiques
-            'impayesParMois' => $impayesParMois,
-        ]);
+                'nbLogements' =>
+                    $nbLogements,
+
+                'nbImmeubles' =>
+                    $nbImmeubles,
+
+                'nbContrats' =>
+                    $nbContrats,
+
+                'revenusMois' =>
+                    $revenusMois,
+
+                'loyersAttendus' =>
+                    $loyersAttendus,
+
+                'paiementsRecents' =>
+                    $paiementsRecents,
+
+                'contratsExpirantListe' =>
+                    $contratsExpirant,
+
+                'impayesParMois' =>
+                    $impayesParMois,
+            ]
+        );
     }
 }
