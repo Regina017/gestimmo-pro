@@ -7,6 +7,13 @@
 
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
+          <meta name="theme-color" content="#2563eb">
+
+<link rel="manifest"
+      href="{{ asset('manifest.json') }}">
+
+<link rel="apple-touch-icon"
+      href="{{ asset('icons/icon-192.png') }}">
 
     <title>{{ config('app.name', 'Gestimmo-Pro') }}</title>
 
@@ -369,6 +376,31 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+if ('serviceWorker' in navigator) {
+
+    window.addEventListener('load', function () {
+
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then(function () {
+
+                console.log('Gestimmo-Pro PWA activée');
+
+            })
+            .catch(function (error) {
+
+                console.log(error);
+
+            });
+
+    });
+
+}
+
+</script>
 
 </body>
 
