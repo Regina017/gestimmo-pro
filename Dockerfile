@@ -3,22 +3,25 @@ FROM php:8.3-cli
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
+    zip \
     libzip-dev \
-    zip
+    libpng-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev
 
-RUN docker-php-ext-install pdo pdo_mysql zip
+RUN docker-php-ext-install \
+    pdo \
+    pdo_mysql \
+    zip \
+    gd
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
 COPY . .
 
-RUN composer install --no-dev --optimize-autoloader
-
-RUN cp .env.example .env || true
-
-RUN php artisan key:generate || true
+RUN composer install --no-dev --optimize-autoloader --ignore-platform-req=ext-gd
 
 EXPOSE 10000
 
