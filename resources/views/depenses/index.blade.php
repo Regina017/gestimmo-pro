@@ -2,62 +2,132 @@
 
 @section('content')
 
-<h1>Gestion des dépenses</h1>
+<div class="container-fluid">
 
-<a href="{{ route('depenses.create') }}"
-   class="btn btn-success mb-3">
+    <div class="card shadow-sm border-0 mb-4">
 
-    Nouvelle dépense
+        <div class="card-body">
 
-</a>
+            <div class="d-flex justify-content-between align-items-center">
 
-<table class="table table-bordered">
+                <div>
 
-    <thead>
+                    <h2 class="fw-bold mb-0">
 
-        <tr>
+                        <i class="fas fa-receipt text-danger"></i>
 
-            <th>Date</th>
-            <th>Catégorie</th>
-            <th>Libellé</th>
-            <th>Montant</th>
+                        Gestion des Dépenses
 
-        </tr>
+                    </h2>
 
-    </thead>
+                    <small class="text-muted">
 
-    <tbody>
+                        Suivi des dépenses de l'entreprise
 
-        @forelse($depenses as $depense)
+                    </small>
 
-            <tr>
+                </div>
 
-                <td>{{ $depense->date_depense }}</td>
+                <div>
 
-                <td>{{ $depense->categorie }}</td>
+                    <a href="{{ route('export.depenses') }}"
+                       class="btn btn-success">
 
-                <td>{{ $depense->libelle }}</td>
+                        <i class="fas fa-file-excel"></i>
 
-                <td>{{ $depense->montant }}</td>
+                        Export Excel
 
-            </tr>
+                    </a>
 
-        @empty
+                    <a href="{{ route('depenses.create') }}"
+                       class="btn btn-primary">
 
-            <tr>
+                        <i class="fas fa-plus"></i>
 
-                <td colspan="4">
+                        Nouvelle dépense
 
-                    Aucune dépense enregistrée
+                    </a>
 
-                </td>
+                </div>
 
-            </tr>
+            </div>
 
-        @endforelse
+        </div>
 
-    </tbody>
+    </div>
 
-</table>
+    <div class="card shadow border-0">
+
+        <div class="card-body table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead class="table-dark">
+
+                <tr>
+
+                    <th>Date</th>
+
+                    <th>Catégorie</th>
+
+                    <th>Libellé</th>
+
+                    <th>Montant</th>
+
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                @forelse($depenses as $depense)
+
+                    <tr>
+
+                        <td>
+                            {{ $depense->date_depense }}
+                        </td>
+
+                        <td>
+                            <span class="badge bg-info">
+                                {{ $depense->categorie }}
+                            </span>
+                        </td>
+
+                        <td>
+                            {{ $depense->libelle }}
+                        </td>
+
+                        <td class="fw-bold text-danger">
+
+                            {{ number_format($depense->montant,2) }}
+
+                        </td>
+
+                    </tr>
+
+                @empty
+
+                    <tr>
+
+                        <td colspan="4" class="text-center">
+
+                            Aucune dépense enregistrée
+
+                        </td>
+
+                    </tr>
+
+                @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
 
 @endsection

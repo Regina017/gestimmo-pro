@@ -1,0 +1,1 @@
+<?php /**PATH C:\laragon\www\gestimmo-pro\resources\views\caisse\create.blade.php ENDPATH**/ ?>

@@ -32,4 +32,41 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Rôles
+    |--------------------------------------------------------------------------
+    */
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'Administrateur';
+    }
+
+    public function isUtilisateur(): bool
+    {
+        return $this->role === 'Utilisateur';
+    }
+
+    public function isConsultation(): bool
+    {
+        return $this->role === 'Consultation';
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Statut
+    |--------------------------------------------------------------------------
+    */
+
+    public function isActif(): bool
+    {
+        return $this->statut === 'Actif';
+    }
+
+    public function isBloque(): bool
+    {
+        return $this->statut === 'Bloqué';
+    }
 }

@@ -1,39 +1,155 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('password.store') }}">
-        @csrf
+<!DOCTYPE html>
+<html lang="fr">
 
-        <!-- Password Reset Token -->
-        <input type="hidden" name="token" value="{{ $request->route('token') }}">
+<head>
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+    <meta charset="UTF-8">
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+    <title>Réinitialisation | Gestimmo‑Pro</title>
 
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                                type="password"
-                                name="password_confirmation" required autocomplete="new-password" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
 
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Reset Password') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    <style>
+
+        body{
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            background:linear-gradient(
+                135deg,
+                #0f172a,
+                #1e3a8a,
+                #2563eb
+            );
+            font-family:"Segoe UI",sans-serif;
+        }
+
+        .card-reset{
+            width:100%;
+            max-width:550px;
+            border:none;
+            border-radius:20px;
+            overflow:hidden;
+            box-shadow:0 20px 40px rgba(0,0,0,.25);
+        }
+
+        .header{
+            background:#16a34a;
+            color:white;
+            text-align:center;
+            padding:30px;
+        }
+
+        .body-card{
+            background:white;
+            padding:30px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="card card-reset">
+
+    <div class="header">
+
+        <h3>
+
+            <i class="fas fa-lock"></i>
+
+            Nouveau mot de passe
+
+        </h3>
+
+    </div>
+
+    <div class="body-card">
+
+        <form method="POST"
+              action="{{ route('password.store') }}">
+
+            @csrf
+
+            <input
+                type="hidden"
+                name="token"
+                value="{{ $request->route('token') }}">
+
+            <div class="mb-3">
+
+                <label>
+
+                    Adresse E‑mail
+
+                </label>
+
+                <input
+                    type="email"
+                    name="email"
+                    value="{{ old('email', $request->email) }}"
+                    class="form-control"
+                    required>
+
+            </div>
+
+            <div class="mb-3">
+
+                <label>
+
+                    Nouveau mot de passe
+
+                </label>
+
+                <input
+                    type="password"
+                    name="password"
+                    class="form-control"
+                    required>
+
+            </div>
+
+            <div class="mb-3">
+
+                <label>
+
+                    Confirmation
+
+                </label>
+
+                <input
+                    type="password"
+                    name="password_confirmation"
+                    class="form-control"
+                    required>
+
+            </div>
+
+            <button
+                type="submit"
+                class="btn btn-success w-100">
+
+                <i class="fas fa-check"></i>
+
+                Réinitialiser le mot de passe
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

@@ -14,7 +14,7 @@ class Occupation extends Model
         'locataire_id',
         'date_entree',
         'date_sortie',
-        'statut',
+        'statut'
     ];
 
     public function bien()

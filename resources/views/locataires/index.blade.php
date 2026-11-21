@@ -2,59 +2,121 @@
 
 @section('content')
 
-<h1>Gestion des locataires</h1>
+<div class="container-fluid">
 
-<a href="{{ route('locataires.create') }}"
-   class="btn btn-success mb-3">
+    <div class="card shadow-sm border-0 mb-4">
 
-    Ajouter un locataire
+        <div class="card-body">
 
-</a>
+            <div class="d-flex justify-content-between align-items-center">
 
-<table class="table table-bordered">
+                <div>
+                    <h2 class="fw-bold mb-0">
+                        <i class="fas fa-users text-primary"></i>
+                        Gestion des Locataires
+                    </h2>
 
-    <thead>
+                    <small class="text-muted">
+                        Liste complète des locataires enregistrés
+                    </small>
+                </div>
 
-        <tr>
+                <div>
 
-            <th>Nom</th>
-            <th>Téléphone</th>
-            <th>Email</th>
+                    <a href="{{ route('export.locataires') }}"
+                       class="btn btn-success">
 
-        </tr>
+                        <i class="fas fa-file-excel"></i>
 
-    </thead>
+                        Export Excel
 
-    <tbody>
+                    </a>
 
-        @forelse($locataires as $locataire)
+                    <a href="{{ route('locataires.create') }}"
+                       class="btn btn-primary">
 
-            <tr>
+                        <i class="fas fa-plus"></i>
 
-                <td>{{ $locataire->nom }}</td>
+                        Nouveau locataire
 
-                <td>{{ $locataire->telephone }}</td>
+                    </a>
 
-                <td>{{ $locataire->email }}</td>
+                </div>
 
-            </tr>
+            </div>
 
-        @empty
+        </div>
 
-            <tr>
+    </div>
 
-                <td colspan="3">
+    <div class="card shadow border-0">
 
-                    Aucun locataire enregistré
+        <div class="card-body table-responsive">
 
-                </td>
+            <table class="table table-hover align-middle">
 
-            </tr>
+                <thead class="table-dark">
 
-        @endforelse
+                <tr>
 
-    </tbody>
+                    <th>ID</th>
 
-</table>
+                    <th>Nom</th>
+
+                    <th>Téléphone</th>
+
+                    <th>Email</th>
+
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                @forelse($locataires as $locataire)
+
+                    <tr>
+
+                        <td>
+                            {{ $locataire->id }}
+                        </td>
+
+                        <td>
+                            {{ $locataire->nom }}
+                        </td>
+
+                        <td>
+                            {{ $locataire->telephone }}
+                        </td>
+
+                        <td>
+                            {{ $locataire->email }}
+                        </td>
+
+                    </tr>
+
+                @empty
+
+                    <tr>
+
+                        <td colspan="4" class="text-center">
+
+                            Aucun locataire enregistré
+
+                        </td>
+
+                    </tr>
+
+                @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
 
 @endsection

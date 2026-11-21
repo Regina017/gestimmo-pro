@@ -2,233 +2,219 @@
 
 @section('content')
 
-<div class="container">
+<div class="container-fluid">
 
-    <h1 class="mb-4">
-        Dashboard GESTIMMO PRO
-    </h1>
+    <div class="row mb-4">
+        <div class="col-12 text-center">
 
-    @if(count($notifications) > 0)
+            <img
+                src="{{ asset('images/logo.png') }}"
+                alt="Logo"
+                style="max-height:120px;"
+                class="mb-3">
 
-        <h4 class="mb-3">
-            🚨 Alertes professionnelles
-        </h4>
+            <h1 class="fw-bold text-primary">
+                GESTIMMO-PRO
+            </h1>
 
-        @foreach($notifications as $notification)
+            <p class="text-muted">
+                Tableau de bord de gestion immobilière
+            </p>
 
-            <div class="alert alert-{{ $notification['type'] }}">
+        </div>
+    </div>
 
-                {{ $notification['message'] }}
+    <div class="row g-4">
 
-            </div>
-
-        @endforeach
-
-    @endif
-
-    <div class="row">
-
-        <div class="col-md-4">
-            <div class="card bg-primary text-white mb-3">
-                <div class="card-body">
-                    <h5>🏠 Biens</h5>
-                    <h2>{{ $biens }}</h2>
+        <div class="col-lg-3 col-md-6">
+            <div class="card shadow border-0 bg-primary text-white">
+                <div class="card-body text-center">
+                    <h6>🏢 Immeubles</h6>
+                    <h2>{{ $totalImmeubles }}</h2>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card bg-success text-white mb-3">
-                <div class="card-body">
-                    <h5>👥 Locataires</h5>
-                    <h2>{{ $locataires }}</h2>
+        <div class="col-lg-3 col-md-6">
+            <div class="card shadow border-0 bg-success text-white">
+                <div class="card-body text-center">
+                    <h6>🏠 Logements</h6>
+                    <h2>{{ $totalBiens }}</h2>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card bg-secondary text-white mb-3">
-                <div class="card-body">
-                    <h5>🏠 Biens vacants</h5>
-                    <h2>{{ $biensVacants }}</h2>
+        <div class="col-lg-3 col-md-6">
+            <div class="card shadow border-0 bg-info text-white">
+                <div class="card-body text-center">
+                    <h6>👥 Locataires</h6>
+                    <h2>{{ $totalLocataires }}</h2>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
-
-            <div class="card bg-dark text-white mb-3">
-
-                <div class="card-body">
-
-                    <h5>📊 Taux d'occupation</h5>
-
-                    <p class="mb-1">
-                        Occupés : {{ $biensOccupes }}
-                    </p>
-
-                    <p class="mb-2">
-                        Vacants : {{ $biensVacants }}
-                    </p>
-
-                    <div class="progress">
-
-                        <div
-                            class="progress-bar bg-success"
-                            role="progressbar"
-                            style="width: {{ $tauxOccupation }}%;">
-
-                            {{ $tauxOccupation }} %
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-4">
-            <div class="card bg-dark text-white mb-3">
-                <div class="card-body">
-                    <h5>👤 Utilisateurs</h5>
-                    <h2>{{ $utilisateurs }}</h2>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card bg-warning text-dark mb-3">
-                <div class="card-body">
-                    <h5>💵 Revenus</h5>
-                    <h2>{{ number_format($paiements, 2) }} $</h2>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card bg-danger text-white mb-3">
-                <div class="card-body">
-                    <h5>💸 Dépenses</h5>
-                    <h2>{{ number_format($depenses, 2) }} $</h2>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card bg-info text-white mb-3">
-                <div class="card-body">
-                    <h5>💰 Solde actuel</h5>
-                    <h2>{{ number_format($solde, 2) }} $</h2>
+        <div class="col-lg-3 col-md-6">
+            <div class="card shadow border-0 bg-warning">
+                <div class="card-body text-center">
+                    <h6>📄 Contrats actifs</h6>
+                    <h2>{{ $totalContrats }}</h2>
                 </div>
             </div>
         </div>
 
     </div>
 
-    <!-- Graphique Revenus / Dépenses -->
+    <div class="row g-4 mt-2">
 
-    <div class="card mt-4">
-
-        <div class="card-header">
-            <h5>📈 Revenus vs Dépenses</h5>
+        <div class="col-lg-3 col-md-6">
+            <div class="card shadow border-0 bg-success text-white">
+                <div class="card-body text-center">
+                    <h6>💰 Revenus du mois</h6>
+                    <h3>{{ number_format($revenus, 0, ',', ' ') }}</h3>
+                </div>
+            </div>
         </div>
 
-        <div class="card-body">
-            <canvas id="financeChart"></canvas>
+        <div class="col-lg-3 col-md-6">
+            <div class="card shadow border-0 bg-danger text-white">
+                <div class="card-body text-center">
+                    <h6>💳 Dépenses</h6>
+                    <h3>{{ number_format($depenses, 0, ',', ' ') }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card shadow border-0 bg-primary text-white">
+                <div class="card-body text-center">
+                    <h6>📈 Bénéfice</h6>
+                    <h3>{{ number_format($benefice, 0, ',', ' ') }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card shadow border-0 bg-dark text-white">
+                <div class="card-body text-center">
+                    <h6>🔔 Notifications</h6>
+                    <h3>{{ $totalNotifications }}</h3>
+                </div>
+            </div>
         </div>
 
     </div>
 
-    <!-- Graphique Mensuel -->
+    <div class="row g-4 mt-2">
 
-    <div class="card mt-4">
-
-        <div class="card-header">
-            <h5>📊 Statistiques mensuelles</h5>
+        <div class="col-lg-4">
+            <div class="card shadow border-0 bg-danger text-white">
+                <div class="card-body text-center">
+                    <h5>🔴 Impayés</h5>
+                    <h1>{{ $impayes }}</h1>
+                </div>
+            </div>
         </div>
 
-        <div class="card-body">
+        <div class="col-lg-4">
+            <div class="card shadow border-0 bg-warning">
+                <div class="card-body text-center">
+                    <h5>⚠ Contrats expirants</h5>
+                    <h1>{{ $contratsExpirants }}</h1>
+                </div>
+            </div>
+        </div>
 
-            <canvas id="monthlyChart"></canvas>
-
+        <div class="col-lg-4">
+            <div class="card shadow border-0 bg-info text-white">
+                <div class="card-body text-center">
+                    <h5>🏠 Logements libres</h5>
+                    <h1>{{ $logementsVacants }}</h1>
+                </div>
+            </div>
         </div>
 
     </div>
 
-    <!-- Contrats arrivant à expiration -->
+    <div class="row mt-5">
 
-    <div class="card mt-4">
-
-        <div class="card-header bg-warning">
-
-            <h5 class="mb-0">
-                📅 Contrats arrivant à expiration
-            </h5>
-
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow border-0">
+                <div class="card-header bg-success text-white">
+                    Revenus / Dépenses
+                </div>
+                <div class="card-body">
+                    <canvas id="revenusDepensesChart"></canvas>
+                </div>
+            </div>
         </div>
 
-        <div class="card-body">
-
-            @if($contratsExpiration->count())
-
-                <div class="table-responsive">
-
-                    <table class="table table-striped table-hover">
-
-                        <thead>
-
-                            <tr>
-
-                                <th>Locataire</th>
-
-                                <th>Bien</th>
-
-                                <th>Date de sortie</th>
-
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            @foreach($contratsExpiration as $occupation)
-
-                                <tr>
-
-                                    <td>
-                                        {{ $occupation->locataire->nom ?? 'N/A' }}
-                                    </td>
-
-                                    <td>
-                                        {{ $occupation->bien->reference ?? 'N/A' }}
-                                    </td>
-
-                                    <td>
-                                        {{ \Carbon\Carbon::parse($occupation->date_sortie)->format('d/m/Y') }}
-                                    </td>
-
-                                </tr>
-
-                            @endforeach
-
-                        </tbody>
-
-                    </table>
-
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow border-0">
+                <div class="card-header bg-warning">
+                    Évolution des impayés
                 </div>
-
-            @else
-
-                <div class="alert alert-success mb-0">
-
-                    ✅ Aucun contrat n'expire dans les 30 prochains jours.
-
+                <div class="card-body">
+                    <canvas id="impayesChart"></canvas>
                 </div>
+            </div>
+        </div>
 
-            @endif
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow border-0">
+                <div class="card-header bg-primary text-white">
+                    Bénéfices / Locataires
+                </div>
+                <div class="card-body">
+                    <canvas id="beneficeLocataireChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card shadow border-0 mt-4">
+
+        <div class="card-header bg-dark text-white">
+            Paiements récents
+        </div>
+
+        <div class="card-body table-responsive">
+
+            <table class="table table-striped align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Montant</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @forelse($paiementsRecents as $paiement)
+
+                        <tr>
+                            <td>
+                                {{ \Carbon\Carbon::parse($paiement->date_paiement)->format('d/m/Y') }}
+                            </td>
+                            <td>
+                                {{ number_format($paiement->montant,0,',',' ') }}
+                            </td>
+                        </tr>
+
+                    @empty
+
+                        <tr>
+                            <td colspan="2" class="text-center">
+                                Aucun paiement
+                            </td>
+                        </tr>
+
+                    @endforelse
+
+                </tbody>
+
+            </table>
 
         </div>
 
@@ -240,154 +226,78 @@
 
 <script>
 
-/*
-|--------------------------------------------------------------------------
-| Revenus / Dépenses
-|--------------------------------------------------------------------------
-*/
+new Chart(
+    document.getElementById('revenusDepensesChart'),
+    {
+        type: 'pie',
+        data: {
+            labels: ['Revenus','Dépenses'],
+            datasets: [{
+                data: [
+                    {{ $revenus }},
+                    {{ $depenses }}
+                ],
+                backgroundColor: [
+                    '#198754',
+                    '#dc3545'
+                ]
+            }]
+        }
+    }
+);
 
-const financeCtx = document.getElementById('financeChart');
-
-new Chart(financeCtx, {
-
-    type: 'bar',
-
-    data: {
-
-        labels: [
-            'Revenus',
-            'Dépenses'
-        ],
-
-        datasets: [{
-
-            label: 'Montant ($)',
-
-            data: [
-                {{ $paiements }},
-                {{ $depenses }}
+new Chart(
+    document.getElementById('impayesChart'),
+    {
+        type: 'line',
+        data: {
+            labels: [
+                'Jan','Fév','Mar','Avr',
+                'Mai','Juin','Juil','Août',
+                'Sep','Oct','Nov','Déc'
             ],
-
-            backgroundColor: [
-                '#198754',
-                '#dc3545'
-            ]
-
-        }]
-
-    },
-
-    options: {
-
-        responsive: true,
-
-        plugins: {
-
-            legend: {
-                display: false
-            }
-
+            datasets: [{
+                label: 'Impayés',
+                data: @json($impayesParMois),
+                borderColor: '#ffc107',
+                backgroundColor: 'rgba(255,193,7,0.2)',
+                fill: true,
+                tension: 0.4
+            }]
         }
-
     }
+);
 
-});
-
-/*
-|--------------------------------------------------------------------------
-| Statistiques mensuelles
-|--------------------------------------------------------------------------
-*/
-
-const monthlyCtx =
-document.getElementById('monthlyChart');
-
-new Chart(monthlyCtx, {
-
-    type: 'line',
-
-    data: {
-
-        labels: [
-
-            'Jan',
-            'Fév',
-            'Mar',
-            'Avr',
-            'Mai',
-            'Juin',
-            'Juil',
-            'Août',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Déc'
-
-        ],
-
-        datasets: [
-
-            {
-
-                label: 'Revenus',
-
-                data: @json($revenusMensuels),
-
-                borderColor: '#198754',
-
-                backgroundColor: '#198754',
-
-                tension: 0.3
-
-            },
-
-            {
-
-                label: 'Dépenses',
-
-                data: @json($depensesMensuelles),
-
-                borderColor: '#dc3545',
-
-                backgroundColor: '#dc3545',
-
-                tension: 0.3
-
-            },
-
-            {
-
-                label: 'Solde',
-
-                data: @json($soldeMensuel),
-
-                borderColor: '#0dcaf0',
-
-                backgroundColor: '#0dcaf0',
-
-                tension: 0.3
-
+new Chart(
+    document.getElementById('beneficeLocataireChart'),
+    {
+        type: 'bar',
+        data: {
+            labels: [
+                'Bénéfice',
+                'Locataires'
+            ],
+            datasets: [{
+                data: [
+                    {{ $benefice }},
+                    {{ $nbLocataires }}
+                ],
+                backgroundColor: [
+                    '#0d6efd',
+                    '#20c997'
+                ]
+            }]
+        },
+        options:{
+            responsive:true,
+            plugins:{
+                legend:{
+                    display:false
+                }
             }
-
-        ]
-
-    },
-
-    options: {
-
-        responsive: true,
-
-        plugins: {
-
-            legend: {
-                position: 'top'
-            }
-
         }
-
     }
-
-});
+);
 
 </script>
 

@@ -2,63 +2,70 @@
 
 @section('content')
 
-<h1>Rapports</h1>
+<div class="container">
 
-<div class="mb-3">
+    <div class="card shadow border-0">
 
-    <a href="{{ route('rapports.biens.excel') }}"
-       class="btn btn-success mb-2">
-        📊 Biens Excel
-    </a>
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">
+                📊 Centre des rapports
+            </h3>
+        </div>
 
-    <a href="{{ route('rapports.locataires.excel') }}"
-       class="btn btn-success mb-2">
-        📊 Locataires Excel
-    </a>
+        <div class="card-body">
 
-    <a href="{{ route('rapports.paiements.excel') }}"
-       class="btn btn-success mb-2">
-        📊 Paiements Excel
-    </a>
+            <div class="row g-3">
 
-    <a href="{{ route('rapports.depenses.excel') }}"
-       class="btn btn-success mb-2">
-        📊 Dépenses Excel
-    </a>
+                <div class="col-md-6">
 
-</div>
+                    <a href="{{ route('rapports.biens') }}"
+                       class="btn btn-primary w-100">
+                        📄 Rapport des biens
+                    </a>
 
-<div class="list-group">
+                </div>
 
-    <a href="{{ route('rapports.biens.pdf') }}"
-       class="list-group-item list-group-item-action">
-        📄 Rapport des biens
-    </a>
+                <div class="col-md-6">
 
-    <a href="{{ route('rapports.locataires.pdf') }}"
-       class="list-group-item list-group-item-action">
-        📄 Rapport des locataires
-    </a>
+                    <a href="{{ route('rapports.locataires') }}"
+                       class="btn btn-success w-100">
+                        👥 Rapport des locataires
+                    </a>
 
-    <a href="{{ route('rapports.occupations.pdf') }}"
-       class="list-group-item list-group-item-action">
-        📄 Rapport des occupations
-    </a>
+                </div>
 
-    <a href="{{ route('rapports.paiements.pdf') }}"
-       class="list-group-item list-group-item-action">
-        📄 Rapport des paiements
-    </a>
+                <div class="col-md-6">
 
-    <a href="{{ route('rapports.depenses.pdf') }}"
-       class="list-group-item list-group-item-action">
-        📄 Rapport des dépenses
-    </a>
+                    <a href="{{ route('rapports.contrats') }}"
+                       class="btn btn-warning w-100">
+                        📑 Rapport des contrats
+                    </a>
 
-    <a href="{{ route('rapports.caisse.pdf') }}"
-       class="list-group-item list-group-item-action">
-        📄 Rapport de caisse
-    </a>
+                </div>
+
+                <div class="col-md-6">
+
+                    <a href="{{ route('rapports.paiements') }}"
+                       class="btn btn-info w-100 text-white">
+                        💰 Rapport des paiements
+                    </a>
+
+                </div>
+
+                <div class="col-md-12">
+
+                    <a href="{{ route('rapports.depenses') }}"
+                       class="btn btn-danger w-100">
+                        💳 Rapport des dépenses
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 

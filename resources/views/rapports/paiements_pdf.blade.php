@@ -1,30 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <meta charset="utf-8">
-    <title>Rapport des paiements</title>
+<meta charset="UTF-8">
+<title>Rapport des Paiements</title>
+
+<style>
+body{font-family:DejaVu Sans;}
+table{width:100%;border-collapse:collapse;}
+th,td{border:1px solid #ddd;padding:8px;}
+th{background:#f2f2f2;}
+.header{text-align:center;}
+</style>
+
 </head>
 <body>
 
-<h1>Rapport des paiements</h1>
+@php
+$societe = \App\Models\Societe::first();
+@endphp
 
-<table border="1" width="100%" cellpadding="5">
+<div class="header">
 
-    <tr>
-        <th>Date</th>
-        <th>Montant</th>
-        <th>Reste</th>
-    </tr>
+@if($societe && $societe->logo)
+<img src="{{ public_path('storage/'.$societe->logo) }}" width="90">
+@endif
 
-    @foreach($paiements as $paiement)
+<h2>{{ $societe->nom }}</h2>
 
-    <tr>
-        <td>{{ $paiement->date_paiement }}</td>
-        <td>{{ $paiement->montant }}</td>
-        <td>{{ $paiement->reste }}</td>
-    </tr>
+</div>
 
-    @endforeach
+<hr>
+
+<h2>Rapport des Paiements</h2>
+
+<table>
+
+<tr>
+<th>Date</th>
+<th>Montant</th>
+<th>Mode</th>
+</tr>
+
+@foreach($paiements as $paiement)
+
+<tr>
+<td>{{ $paiement->date_paiement }}</td>
+<td>{{ number_format($paiement->montant,2) }} $</td>
+<td>{{ $paiement->mode_paiement }}</td>
+</tr>
+
+@endforeach
 
 </table>
 

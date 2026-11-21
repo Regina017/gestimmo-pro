@@ -2,96 +2,185 @@
 
 @section('content')
 
-<h1>Gestion des utilisateurs</h1>
+<div class="container-fluid">
 
-<a href="{{ route('users.create') }}"
-   class="btn btn-success mb-3">
-    Nouvel utilisateur
-</a>
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-<table class="table table-bordered">
+        <h2 class="fw-bold">
+            Gestion des utilisateurs
+        </h2>
 
-    <thead>
-        <tr>
-            <th>Nom</th>
-            <th>Identifiant</th>
-            <th>Téléphone</th>
-            <th>Email</th>
-            <th>Rôle</th>
-            <th>Statut</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
+        <a href="{{ route('users.create') }}"
+           class="btn btn-primary">
+            + Nouvel utilisateur
+        </a>
 
-    <tbody>
+    </div>
 
-    @foreach($users as $user)
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
 
-        <tr>
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
 
-            <td>{{ $user->name }}</td>
-            <td>{{ $user->identifiant }}</td>
-            <td>{{ $user->telephone }}</td>
-            <td>{{ $user->email }}</td>
-            <td>{{ $user->role }}</td>
-            <td>{{ $user->statut }}</td>
+    <div class="card shadow border-0">
 
-            <td>
+        <div class="card-body table-responsive">
 
-                <a href="{{ route('users.edit', $user->id) }}"
-                   class="btn btn-primary btn-sm">
-                    Modifier
-                </a>
+            <table class="table table-hover align-middle">
 
-                <a href="{{ route('users.password.edit', $user->id) }}"
-                   class="btn btn-secondary btn-sm">
-                    Mot de passe
-                </a>
+                <thead class="table-dark">
 
-                @if($user->statut == 'Actif')
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Identifiant</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Rôle</th>
+                    <th>Statut</th>
+                    <th width="280">Actions</th>
+                </tr>
 
-                    <a href="{{ route('users.block', $user->id) }}"
-                       class="btn btn-warning btn-sm">
-                        Bloquer
-                    </a>
+                </thead>
 
-                @else
+                <tbody>
 
-                    <a href="{{ route('users.unblock', $user->id) }}"
-                       class="btn btn-success btn-sm">
-                        Débloquer
-                    </a>
+                @forelse($users as $user)
 
-                @endif
+                    <tr>
 
-                <form action="{{ route('users.destroy', $user->id) }}"
-                      method="POST"
-                      class="d-inline">
+                        <td>{{ $user->id }}</td>
 
-                    @csrf
-                    @method('DELETE')
+                        <td>{{ $user->name }}</td>
 
-                    <button
-                        type="submit"
-                        class="btn btn-danger btn-sm"
-                        onclick="return confirm('Supprimer cet utilisateur ?')">
+                        <td>{{ $user->identifiant }}</td>
 
-                        Supprimer
+                        <td>{{ $user->email }}</td>
 
-                    </button>
+                        <td>{{ $user->telephone }}</td>
 
-                </form>
+                        <td>
 
-            </td>
+                            @if($user->role == 'Administrateur')
+                                <span class="badge bg-danger">
+                                    Administrateur
+                                </span>
+                            @elseif($user->role == 'Utilisateur')
+                                <span class="badge bg-primary">
+                                    Utilisateur
+                                </span>
+                            @else
+                                <span class="badge bg-secondary">
+                                    Consultation
+                                </span>
+                            @endif
 
-        </tr>
+                        </td>
 
-    @endforeach
+                        <td>
 
-    </tbody>
+                            @if($user->statut == 'Actif')
+                                <span class="badge bg-success">
+                                    Actif
+                                </span>
+                            @else
+                                <span class="badge bg-danger">
+                                    Bloqué
+                                </span>
+                            @endif
 
-</table>
+                        </td>
+
+                        <td>
+
+                            <a href="{{ route('users.edit',$user) }}"
+                               class="btn btn-warning btn-sm">
+                                Modifier
+                            </a>
+
+                            @if($user->statut == 'Actif')
+
+                                <form
+                                    action="{{ route('users.bloquer',$user) }}"
+                                    method="POST"
+                                    class="d-inline">
+
+                                    @csrf
+                                    @method('PUT')
+
+                                    <button class="btn btn-secondary btn-sm">
+                                        Bloquer
+                                    </button>
+
+                                </form>
+
+                            @else
+
+                                <form
+                                    action="{{ route('users.debloquer',$user) }}"
+                                    method="POST"
+                                    class="d-inline">
+
+                                    @csrf
+                                    @method('PUT')
+
+                                    <button class="btn btn-success btn-sm">
+                                        Débloquer
+                                    </button>
+
+                                </form>
+
+                            @endif
+
+                            <form
+                                action="{{ route('users.destroy',$user) }}"
+                                method="POST"
+                                class="d-inline">
+
+                                @csrf
+                                @method('DELETE')
+
+                                <button
+                                    onclick="return confirm('Supprimer cet utilisateur ?')"
+                                    class="btn btn-danger btn-sm">
+
+                                    Supprimer
+
+                                </button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                @empty
+
+                    <tr>
+                        <td colspan="8" class="text-center">
+                            Aucun utilisateur trouvé.
+                        </td>
+                    </tr>
+
+                @endforelse
+
+                </tbody>
+
+            </table>
+
+            {{ $users->links() }}
+
+        </div>
+
+    </div>
+
+</div>
 
 @endsection
-
-               

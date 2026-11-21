@@ -2,94 +2,87 @@
 <html lang="fr">
 
 <head>
+
     <meta charset="UTF-8">
 
     <title>Reçu de paiement</title>
 
     <style>
 
-        body {
+        body{
             font-family: DejaVu Sans, sans-serif;
-            margin: 30px;
-            color: #333;
-            font-size: 14px;
+            font-size:12px;
+            color:#333;
+            margin:30px;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
+        .header{
+            text-align:center;
+            margin-bottom:20px;
         }
 
-        .logo {
-            width: 220px;
-            height: auto;
-            margin-bottom: 15px;
+        .header img{
+            width:110px;
         }
 
-        .title {
-            font-size: 30px;
-            font-weight: bold;
-            color: #198754;
-            margin-bottom: 5px;
+        .societe{
+            margin-top:10px;
         }
 
-        .company {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 5px;
+        .titre{
+            text-align:center;
+            font-size:24px;
+            font-weight:bold;
+            color:#198754;
+            margin:25px 0;
         }
 
-        .description {
-            font-size: 12px;
-            color: #888;
-            margin-bottom: 15px;
+        .numero{
+            text-align:right;
+            margin-bottom:20px;
+            font-weight:bold;
         }
 
-        .receipt-number {
-            display: inline-block;
-            padding: 8px 15px;
-            background: #f5f5f5;
-            border: 1px solid #ddd;
-            font-weight: bold;
-            color: #444;
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:15px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 30px;
+        th{
+            background:#f5f5f5;
+            border:1px solid #ddd;
+            padding:10px;
+            text-align:left;
+            width:35%;
         }
 
-        td {
-            border: 1px solid #ddd;
-            padding: 12px;
+        td{
+            border:1px solid #ddd;
+            padding:10px;
         }
 
-        .label {
-            width: 35%;
-            background: #f5f5f5;
-            font-weight: bold;
+        .signature{
+            margin-top:70px;
+            width:100%;
         }
 
-        .success {
-            color: #198754;
-            font-weight: bold;
+        .signature td{
+            border:none;
+            text-align:center;
+            padding-top:60px;
         }
 
-        .warning {
-            color: #fd7e14;
-            font-weight: bold;
+        .footer{
+            margin-top:50px;
+            text-align:center;
+            font-size:10px;
+            color:#777;
         }
 
-        .signature {
-            margin-top: 70px;
-        }
-
-        .footer {
-            margin-top: 70px;
-            text-align: center;
-            color: #777;
-            font-size: 12px;
+        .success{
+            color:#198754;
+            font-weight:bold;
         }
 
     </style>
@@ -98,129 +91,162 @@
 
 <body>
 
-    <div class="header">
+@php
+    $societe = \App\Models\Societe::first();
+@endphp
 
-        @php
-            $logo = public_path('images/logo.png');
-        @endphp
+<div class="header">
 
-        @if(file_exists($logo))
+    @if($societe && $societe->logo)
 
-            <img
-                src="{{ $logo }}"
-                alt="Logo"
-                class="logo"
-            >
+        <img
+            src="{{ public_path('storage/'.$societe->logo) }}"
+            alt="Logo">
 
-        @endif
+    @endif
 
-        <div class="title">
-            REÇU DE PAIEMENT
+    <div class="societe">
+
+        <h2>
+            {{ $societe->nom ?? 'GESTIMMO-PRO' }}
+        </h2>
+
+        <div>
+            {{ $societe->adresse ?? '' }}
         </div>
 
-        <div class="company">
-            BÂTIMENTS MATHE SÉBASTIEN
+        <div>
+            {{ $societe->ville ?? '' }}
         </div>
 
-        <div class="description">
-            Gestion Immobilière Professionnelle
+        <div>
+            {{ $societe->telephone ?? '' }}
         </div>
 
-        <div class="receipt-number">
-            N° REC-{{ str_pad($paiement->id, 6, '0', STR_PAD_LEFT) }}
+        <div>
+            {{ $societe->email ?? '' }}
         </div>
 
     </div>
 
-    <table>
+</div>
 
-        <tr>
-            <td class="label">Locataire</td>
-            <td>
-                {{ $occupation->locataire->nom ?? 'Non disponible' }}
-            </td>
-        </tr>
+<hr>
 
-        <tr>
-            <td class="label">Bien</td>
-            <td>
-                {{ $occupation->bien->reference ?? 'Non disponible' }}
-            </td>
-        </tr>
+<div class="titre">
 
-        <tr>
-            <td class="label">Date du paiement</td>
-            <td>
-                {{ \Carbon\Carbon::parse($paiement->date_paiement)->format('d/m/Y') }}
-            </td>
-        </tr>
+    REÇU DE PAIEMENT
 
-        <tr>
-            <td class="label">Montant payé</td>
-            <td>
-                {{ number_format($paiement->montant, 2) }} $
-            </td>
-        </tr>
+</div>
 
-        <tr>
-            <td class="label">Reste à payer</td>
-            <td>
-                {{ number_format($paiement->reste, 2) }} $
-            </td>
-        </tr>
+<div class="numero">
 
-        <tr>
-            <td class="label">Statut</td>
+    N° REC-{{ str_pad($paiement->id, 6, '0', STR_PAD_LEFT) }}
 
-            <td>
+</div>
 
-                @if($paiement->reste > 0)
+<table>
 
-                    <span class="warning">
-                        Paiement partiel
-                    </span>
+    <tr>
+        <th>Référence</th>
+        <td>
+            REC-{{ str_pad($paiement->id, 6, '0', STR_PAD_LEFT) }}
+        </td>
+    </tr>
 
-                @else
+    <tr>
+        <th>Locataire</th>
+        <td>
+            {{ $paiement->contrat->locataire->nom ?? '' }}
+            {{ $paiement->contrat->locataire->prenom ?? '' }}
+        </td>
+    </tr>
 
-                    <span class="success">
-                        Paiement complet
-                    </span>
+    <tr>
+        <th>Logement</th>
+        <td>
+            {{ $paiement->contrat->logement->numero ?? '' }}
+        </td>
+    </tr>
 
-                @endif
+    <tr>
+        <th>Date du paiement</th>
+        <td>
+            {{ $paiement->date_paiement ?? '' }}
+        </td>
+    </tr>
 
-            </td>
+    <tr>
+        <th>Montant payé</th>
+        <td>
+            {{ number_format($paiement->montant ?? 0, 2, ',', ' ') }} $
+        </td>
+    </tr>
 
-        </tr>
+    <tr>
+        <th>Mode de paiement</th>
+        <td>
+            {{ $paiement->mode_paiement ?? 'Non défini' }}
+        </td>
+    </tr>
 
-    </table>
+    <tr>
+        <th>Statut</th>
+        <td class="success">
+            Paiement reçu
+        </td>
+    </tr>
 
-    <div class="signature">
+</table>
 
-        Je soussigné confirme avoir reçu le montant indiqué ci-dessus.
+<div style="margin-top:30px; line-height:1.8;">
 
-        <br><br><br>
+    Nous confirmons avoir reçu le paiement mentionné ci-dessus.
 
-        Signature :
+    <br><br>
 
-        ________________________________________
+    Le présent reçu est délivré au locataire pour servir et valoir ce que de droit.
 
-    </div>
+</div>
 
-    <div class="footer">
+<table class="signature">
 
-        <strong>BÂTIMENTS MATHE SÉBASTIEN</strong>
+    <tr>
 
-        <br>
+        <td>
 
-        GESTIMMO PRO v1.3
+            ____________________________
 
-        <br><br>
+            <br><br>
 
-        Reçu généré automatiquement le
+            Signature du gestionnaire
 
-        {{ now()->format('d/m/Y à H:i') }}
+        </td>
 
-    </div>
+        <td>
+
+            ____________________________
+
+            <br><br>
+
+            Signature du locataire
+
+        </td>
+
+    </tr>
+
+</table>
+
+<div class="footer">
+
+    Document généré automatiquement par GESTIMMO‑PRO
+
+    <br>
+
+    Date d'impression :
+    {{ now()->format('d/m/Y H:i') }}
+
+</div>
 
 </body>
 

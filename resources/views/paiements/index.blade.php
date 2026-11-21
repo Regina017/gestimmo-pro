@@ -2,83 +2,200 @@
 
 @section('content')
 
-<h1>Gestion des paiements</h1>
+<div class="container-fluid">
 
-<a href="{{ route('paiements.create') }}"
-   class="btn btn-success mb-3">
+    <div class="card shadow-sm border-0 mb-4">
 
-    Nouveau paiement
+        <div class="card-body">
 
-</a>
+            <div class="d-flex justify-content-between align-items-center">
 
-<table class="table table-bordered">
+                <div>
 
-    <thead>
+                    <h2 class="fw-bold mb-0">
 
-        <tr>
+                        <i class="fas fa-money-bill-wave text-success"></i>
 
-            <th>Occupation</th>
-            <th>Date</th>
-            <th>Montant</th>
-            <th>Reste</th>
-            <th>Actions</th>
+                        Gestion des Paiements
 
-        </tr>
+                    </h2>
 
-    </thead>
+                    <small class="text-muted">
 
-    <tbody>
+                        Encaissements et suivi des loyers
 
-        @forelse($paiements as $paiement)
+                    </small>
 
-            <tr>
+                </div>
 
-                <td>{{ $paiement->occupation_id }}</td>
+                <div>
 
-                <td>{{ $paiement->date_paiement }}</td>
+                    <a href="{{ route('export.paiements') }}"
+                       class="btn btn-success">
 
-                <td>{{ $paiement->montant }}</td>
+                        <i class="fas fa-file-excel"></i>
 
-                <td>{{ $paiement->reste }}</td>
-
-                <td>
-
-                    <a
-                        href="{{ route('paiements.edit', $paiement) }}"
-                        class="btn btn-primary btn-sm">
-
-                        Modifier
+                        Export Excel
 
                     </a>
 
-                    <a
-                        href="{{ route('paiements.recu', $paiement) }}"
-                        class="btn btn-danger btn-sm">
+                    <a href="{{ route('paiements.create') }}"
+                       class="btn btn-primary">
 
-                        📄 Reçu PDF
+                        <i class="fas fa-plus"></i>
+
+                        Nouveau paiement
 
                     </a>
 
-                </td>
+                </div>
 
-            </tr>
+            </div>
 
-        @empty
+        </div>
 
-            <tr>
+    </div>
 
-                <td colspan="5">
+    <div class="card shadow border-0">
 
-                    Aucun paiement enregistré
+        <div class="card-body table-responsive">
 
-                </td>
+            <table class="table table-hover align-middle">
 
-            </tr>
+                <thead class="table-dark">
 
-        @endforelse
+                <tr>
 
-    </tbody>
+                    <th>ID</th>
 
-</table>
+                    <th>Contrat</th>
+
+                    <th>Date</th>
+
+                    <th>Montant</th>
+
+                    <th>Mode</th>
+
+                    <th width="420">
+                        Actions
+                    </th>
+
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                @forelse($paiements as $paiement)
+
+                    <tr>
+
+                        <td>
+                            {{ $paiement->id }}
+                        </td>
+
+                        <td>
+                            {{ $paiement->contrat_id }}
+                        </td>
+
+                        <td>
+                            {{ $paiement->date_paiement }}
+                        </td>
+
+                        <td class="fw-bold text-success">
+
+                            {{ number_format($paiement->montant,2) }}
+
+                        </td>
+
+                        <td>
+
+                            <span class="badge bg-primary">
+
+                                {{ $paiement->mode_paiement }}
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <a href="{{ route('paiements.show',$paiement) }}"
+                               class="btn btn-info btn-sm">
+
+                                <i class="fas fa-eye"></i>
+
+                            </a>
+
+                            <a href="{{ route('paiements.edit',$paiement) }}"
+                               class="btn btn-warning btn-sm">
+
+                                <i class="fas fa-pen"></i>
+
+                            </a>
+
+                            <a href="{{ route('paiements.recu',$paiement) }}"
+                               class="btn btn-danger btn-sm">
+
+                                <i class="fas fa-file-pdf"></i>
+
+                                Reçu
+
+                            </a>
+
+                            <a href="{{ route('paiements.quittance',$paiement) }}"
+                               class="btn btn-success btn-sm">
+
+                                <i class="fas fa-file-pdf"></i>
+
+                                Quittance
+
+                            </a>
+
+                            <form action="{{ route('paiements.destroy',$paiement) }}"
+                                  method="POST"
+                                  class="d-inline">
+
+                                @csrf
+                                @method('DELETE')
+
+                                <button
+                                    class="btn btn-outline-danger btn-sm"
+                                    onclick="return confirm('Supprimer ce paiement ?')">
+
+                                    <i class="fas fa-trash"></i>
+
+                                </button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                @empty
+
+                    <tr>
+
+                        <td colspan="6"
+                            class="text-center">
+
+                            Aucun paiement enregistré
+
+                        </td>
+
+                    </tr>
+
+                @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
 
 @endsection

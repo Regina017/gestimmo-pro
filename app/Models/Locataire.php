@@ -15,4 +15,14 @@ class Locataire extends Model
         'piece_identite',
         'photo'
     ];
+
+    public function occupations()
+    {
+        return $this->hasMany(Occupation::class);
+    }
+
+    public function contrats()
+    {
+        return $this->hasMany(Contrat::class);
+    }
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Paiement;
-use App\Models\Occupation;
+use App\Models\Contrat;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -11,9 +11,7 @@ class PaiementController extends Controller
 {
     public function index()
     {
-        $paiements = Paiement::with([
-            'occupation'
-        ])->get();
+        $paiements = Paiement::latest()->paginate(10);
 
         return view(
             'paiements.index',
@@ -23,36 +21,24 @@ class PaiementController extends Controller
 
     public function create()
     {
-        if (auth()->user()->role == 'Consultation') {
-            abort(403);
-        }
-
-        $occupations = Occupation::with([
-            'bien',
-            'locataire'
-        ])->get();
+        $contrats = Contrat::all();
 
         return view(
             'paiements.create',
-            compact('occupations')
+            compact('contrats')
         );
     }
 
     public function store(Request $request)
     {
-        if (auth()->user()->role == 'Consultation') {
-            abort(403);
-        }
-
         $request->validate([
-            'occupation_id' => 'required',
+            'contrat_id'    => 'required',
             'date_paiement' => 'required|date',
-            'montant' => 'required|numeric',
+            'montant'       => 'required|numeric',
+            'mode_paiement' => 'required',
         ]);
 
-        Paiement::create(
-            $request->all()
-        );
+        Paiement::create($request->all());
 
         return redirect()
             ->route('paiements.index')
@@ -72,20 +58,13 @@ class PaiementController extends Controller
 
     public function edit(Paiement $paiement)
     {
-        if (auth()->user()->role == 'Consultation') {
-            abort(403);
-        }
-
-        $occupations = Occupation::with([
-            'bien',
-            'locataire'
-        ])->get();
+        $contrats = Contrat::all();
 
         return view(
             'paiements.edit',
             compact(
                 'paiement',
-                'occupations'
+                'contrats'
             )
         );
     }
@@ -93,15 +72,13 @@ class PaiementController extends Controller
     public function update(
         Request $request,
         Paiement $paiement
-    ) {
-        if (auth()->user()->role == 'Consultation') {
-            abort(403);
-        }
-
+    )
+    {
         $request->validate([
-            'occupation_id' => 'required',
+            'contrat_id'    => 'required',
             'date_paiement' => 'required|date',
-            'montant' => 'required|numeric',
+            'montant'       => 'required|numeric',
+            'mode_paiement' => 'required',
         ]);
 
         $paiement->update(
@@ -118,56 +95,37 @@ class PaiementController extends Controller
 
     public function destroy(Paiement $paiement)
     {
-        if (
-            auth()->user()->role !=
-            'Administrateur'
-        ) {
-            abort(403);
-        }
-
         $paiement->delete();
 
         return redirect()
             ->route('paiements.index')
             ->with(
                 'success',
-                'Paiement supprimé avec succès.'
+                'Paiement supprimé.'
             );
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | REÇU PDF
-    |--------------------------------------------------------------------------
-    */
-
-    public function recu(
-        Paiement $paiement
-    ) {
-        $occupation = Occupation::with([
-            'locataire',
-            'bien'
-        ])->find(
-            $paiement->occupation_id
-        );
-
+    public function recu(Paiement $paiement)
+    {
         $pdf = Pdf::loadView(
             'paiements.recu',
-            [
-                'paiement' => $paiement,
-                'occupation' => $occupation
-            ]
+            compact('paiement')
         );
 
-        return $pdf->download(
-            'Recu-' .
-            str_pad(
-                $paiement->id,
-                6,
-                '0',
-                STR_PAD_LEFT
-            ) .
-            '.pdf'
+        return $pdf->stream(
+            'recu-'.$paiement->id.'.pdf'
+        );
+    }
+
+    public function quittance(Paiement $paiement)
+    {
+        $pdf = Pdf::loadView(
+            'paiements.quittance',
+            compact('paiement')
+        );
+
+        return $pdf->stream(
+            'quittance-'.$paiement->id.'.pdf'
         );
     }
 }

@@ -2,20 +2,28 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Paiement extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
-        'occupation_id',
+        'contrat_id',
         'date_paiement',
         'montant',
-        'reste',
-        'mode_paiement'
+        'mode_paiement',
+        'reference',
+        'observation',
     ];
 
-    public function occupation()
+    protected $casts = [
+        'date_paiement' => 'date',
+    ];
+
+    public function contrat()
     {
-        return $this->belongsTo(Occupation::class);
+        return $this->belongsTo(Contrat::class);
     }
 }

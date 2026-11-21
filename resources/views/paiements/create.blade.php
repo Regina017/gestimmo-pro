@@ -2,73 +2,138 @@
 
 @section('content')
 
-<h1>Nouveau paiement</h1>
+<div class="container">
 
-<form method="POST"
-      action="{{ route('paiements.store') }}">
+    <div class="card shadow">
 
-    @csrf
+        <div class="card-header bg-primary text-white">
 
-    <div class="mb-3">
+            <h4 class="mb-0">
+                💰 Nouveau paiement
+            </h4>
 
-        <label>Occupation</label>
+        </div>
 
-        <select
-            name="occupation_id"
-            class="form-control">
+        <div class="card-body">
 
-            @foreach($occupations as $occupation)
+            <form
+                action="{{ route('paiements.store') }}"
+                method="POST">
 
-                <option value="{{ $occupation->id }}">
+                @csrf
 
-                    {{ $occupation->bien->reference }}
-                    -
-                    {{ $occupation->locataire->nom }}
+                <div class="mb-3">
 
-                </option>
+                    <label class="form-label">
+                        Contrat
+                    </label>
 
-            @endforeach
+                    <select
+                        name="contrat_id"
+                        class="form-control"
+                        required>
 
-        </select>
+                        <option value="">
+                            Sélectionner
+                        </option>
+
+                        @foreach($contrats as $contrat)
+
+                            <option
+                                value="{{ $contrat->id }}">
+
+                                Contrat #{{ $contrat->id }}
+
+                            </option>
+
+                        @endforeach
+
+                    </select>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Date paiement
+                    </label>
+
+                    <input
+                        type="date"
+                        name="date_paiement"
+                        class="form-control"
+                        required>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Montant
+                    </label>
+
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="montant"
+                        class="form-control"
+                        required>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Mode de paiement
+                    </label>
+
+                    <select
+                        name="mode_paiement"
+                        class="form-control"
+                        required>
+
+                        <option value="Espèces">
+                            Espèces
+                        </option>
+
+                        <option value="Virement">
+                            Virement
+                        </option>
+
+                        <option value="Chèque">
+                            Chèque
+                        </option>
+
+                        <option value="Carte bancaire">
+                            Carte bancaire
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn btn-success">
+
+                    Enregistrer
+
+                </button>
+
+                <a
+                    href="{{ route('paiements.index') }}"
+                    class="btn btn-secondary">
+
+                    Annuler
+
+                </a>
+
+            </form>
+
+        </div>
 
     </div>
 
-    <div class="mb-3">
-
-        <label>Date paiement</label>
-
-        <input type="date"
-               name="date_paiement"
-               class="form-control">
-
-    </div>
-
-    <div class="mb-3">
-
-        <label>Montant</label>
-
-        <input type="number"
-               name="montant"
-               class="form-control">
-
-    </div>
-
-    <div class="mb-3">
-
-        <label>Reste</label>
-
-        <input type="number"
-               name="reste"
-               class="form-control">
-
-    </div>
-
-    <button class="btn btn-primary">
-
-        Enregistrer
-
-    </button>
-
-</form>
+</div>
 
 @endsection

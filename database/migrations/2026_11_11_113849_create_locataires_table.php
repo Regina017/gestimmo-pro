@@ -14,17 +14,22 @@ return new class extends Migration
 
             $table->string('nom');
 
-            $table->string('prenom')->nullable();
+            $table->string('prenom');
 
-            $table->string('telephone');
+            $table->string('telephone')
+                ->nullable();
 
-            $table->string('email')->nullable();
+            $table->string('email')
+                ->nullable();
 
-            $table->string('adresse')->nullable();
+            $table->text('adresse')
+                ->nullable();
 
-            $table->string('piece_identite')->nullable();
+            $table->string('piece_identite')
+                ->nullable();
 
-            $table->string('photo')->nullable();
+            $table->string('photo')
+                ->nullable();
 
             $table->timestamps();
 

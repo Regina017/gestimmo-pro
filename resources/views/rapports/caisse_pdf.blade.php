@@ -1,29 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <meta charset="utf-8">
-    <title>Rapport de caisse</title>
+<meta charset="UTF-8">
+<title>Rapport de Caisse</title>
+
+<style>
+body{font-family:DejaVu Sans;}
+table{width:100%;border-collapse:collapse;}
+th,td{border:1px solid #ddd;padding:8px;}
+th{background:#f2f2f2;}
+.header{text-align:center;}
+</style>
+
 </head>
 <body>
 
-<h1>Rapport de caisse</h1>
+@php
+$societe = \App\Models\Societe::first();
+@endphp
 
-<table border="1" width="100%" cellpadding="10">
+<div class="header">
 
-    <tr>
-        <th>Total paiements</th>
-        <td>{{ $totalPaiements }}</td>
-    </tr>
+@if($societe && $societe->logo)
+<img src="{{ public_path('storage/'.$societe->logo) }}" width="90">
+@endif
 
-    <tr>
-        <th>Total dépenses</th>
-        <td>{{ $totalDepenses }}</td>
-    </tr>
+<h2>{{ $societe->nom }}</h2>
 
-    <tr>
-        <th>Solde</th>
-        <td>{{ $solde }}</td>
-    </tr>
+</div>
+
+<hr>
+
+<h2>Rapport de Caisse</h2>
+
+<table>
+
+<tr>
+<th>Revenus</th>
+<td>{{ number_format($revenus,2) }} $</td>
+</tr>
+
+<tr>
+<th>Dépenses</th>
+<td>{{ number_format($depenses,2) }} $</td>
+</tr>
+
+<tr>
+<th>Solde</th>
+<td>{{ number_format($revenus - $depenses,2) }} $</td>
+</tr>
 
 </table>
 

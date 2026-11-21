@@ -1,32 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <meta charset="utf-8">
-    <title>Rapport des dépenses</title>
+<meta charset="UTF-8">
+<title>Rapport des Dépenses</title>
+
+<style>
+body{font-family:DejaVu Sans;}
+table{width:100%;border-collapse:collapse;}
+th,td{border:1px solid #ddd;padding:8px;}
+th{background:#f2f2f2;}
+.header{text-align:center;}
+</style>
+
 </head>
 <body>
 
-<h1>Rapport des dépenses</h1>
+@php
+$societe = \App\Models\Societe::first();
+@endphp
 
-<table border="1" width="100%" cellpadding="5">
+<div class="header">
 
-    <tr>
-        <th>Date</th>
-        <th>Catégorie</th>
-        <th>Libellé</th>
-        <th>Montant</th>
-    </tr>
+@if($societe && $societe->logo)
+<img src="{{ public_path('storage/'.$societe->logo) }}" width="90">
+@endif
 
-    @foreach($depenses as $depense)
+<h2>{{ $societe->nom }}</h2>
 
-    <tr>
-        <td>{{ $depense->date_depense }}</td>
-        <td>{{ $depense->categorie }}</td>
-        <td>{{ $depense->libelle }}</td>
-        <td>{{ $depense->montant }}</td>
-    </tr>
+</div>
 
-    @endforeach
+<hr>
+
+<h2>Rapport des Dépenses</h2>
+
+<table>
+
+<tr>
+<th>Date</th>
+<th>Libellé</th>
+<th>Montant</th>
+</tr>
+
+@foreach($depenses as $depense)
+
+<tr>
+<td>{{ $depense->created_at }}</td>
+<td>{{ $depense->libelle }}</td>
+<td>{{ number_format($depense->montant,2) }} $</td>
+</tr>
+
+@endforeach
 
 </table>
 

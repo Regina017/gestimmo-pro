@@ -9,7 +9,7 @@ class LocataireController extends Controller
 {
     public function index()
     {
-        $locataires = Locataire::all();
+        $locataires = Locataire::latest()->get();
 
         return view(
             'locataires.index',
@@ -32,10 +32,34 @@ class LocataireController extends Controller
             abort(403);
         }
 
-        Locataire::create($request->all());
+        $request->validate([
+            'nom'       => 'required|max:255',
+            'prenom'    => 'required|max:255',
+            'telephone' => 'nullable|max:50',
+            'email'     => 'nullable|email|max:255',
+        ]);
+
+        Locataire::create([
+            'nom'       => $request->nom,
+            'prenom'    => $request->prenom,
+            'telephone' => $request->telephone,
+            'email'     => $request->email,
+        ]);
 
         return redirect()
-            ->route('locataires.index');
+            ->route('locataires.index')
+            ->with(
+                'success',
+                'Locataire ajouté avec succès.'
+            );
+    }
+
+    public function show(Locataire $locataire)
+    {
+        return view(
+            'locataires.show',
+            compact('locataire')
+        );
     }
 
     public function edit(Locataire $locataire)
@@ -59,12 +83,26 @@ class LocataireController extends Controller
             abort(403);
         }
 
-        $locataire->update(
-            $request->all()
-        );
+        $request->validate([
+            'nom'       => 'required|max:255',
+            'prenom'    => 'required|max:255',
+            'telephone' => 'nullable|max:50',
+            'email'     => 'nullable|email|max:255',
+        ]);
+
+        $locataire->update([
+            'nom'       => $request->nom,
+            'prenom'    => $request->prenom,
+            'telephone' => $request->telephone,
+            'email'     => $request->email,
+        ]);
 
         return redirect()
-            ->route('locataires.index');
+            ->route('locataires.index')
+            ->with(
+                'success',
+                'Locataire modifié avec succès.'
+            );
     }
 
     public function destroy(Locataire $locataire)
@@ -76,6 +114,10 @@ class LocataireController extends Controller
         $locataire->delete();
 
         return redirect()
-            ->route('locataires.index');
+            ->route('locataires.index')
+            ->with(
+                'success',
+                'Locataire supprimé.'
+            );
     }
 }

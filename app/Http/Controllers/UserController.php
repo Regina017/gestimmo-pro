@@ -3,207 +3,161 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Journal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    /**
+     * Affichage de la liste des utilisateurs
+     */
     public function index()
     {
-        if (!auth()->check()) {
-            return redirect('/login');
-        }
-
-        if (auth()->user()->role !== 'Administrateur') {
-            abort(403);
-        }
-
-        $users = User::all();
+        $users = User::latest()->paginate(15);
 
         return view('users.index', compact('users'));
     }
 
+    /**
+     * Formulaire de création
+     */
     public function create()
     {
-        if (!auth()->check()) {
-            return redirect('/login');
-        }
-
-        if (auth()->user()->role !== 'Administrateur') {
-            abort(403);
-        }
-
         return view('users.create');
     }
 
+    /**
+     * Enregistrement
+     */
     public function store(Request $request)
     {
-        if (!auth()->check()) {
-            return redirect('/login');
-        }
-
-        if (auth()->user()->role !== 'Administrateur') {
-            abort(403);
-        }
+        $request->validate([
+            'name'         => 'required|max:255',
+            'identifiant'  => 'required|max:255|unique:users,identifiant',
+            'telephone'    => 'nullable|max:50',
+            'email'        => 'required|email|unique:users,email',
+            'password'     => 'required|min:6|confirmed',
+            'role'         => 'required',
+            'statut'       => 'required',
+        ]);
 
         User::create([
-            'name' => $request->name,
+            'name'        => $request->name,
             'identifiant' => $request->identifiant,
-            'telephone' => $request->telephone,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
-            'statut' => 'Actif',
+            'telephone'   => $request->telephone,
+            'email'       => $request->email,
+            'password'    => Hash::make($request->password),
+            'role'        => $request->role,
+            'statut'      => $request->statut,
         ]);
 
-        Journal::create([
-            'utilisateur' => auth()->user()->name,
-            'action' => 'Création utilisateur '.$request->name,
-        ]);
-
-        return redirect()->route('users.index');
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'Utilisateur créé avec succès.');
     }
 
+    /**
+     * Affichage détail
+     */
+    public function show(User $user)
+    {
+        return view('users.show', compact('user'));
+    }
+
+    /**
+     * Formulaire modification
+     */
     public function edit(User $user)
     {
-        if (!auth()->check()) {
-            return redirect('/login');
-        }
-
-        if (auth()->user()->role !== 'Administrateur') {
-            abort(403);
-        }
-
         return view('users.edit', compact('user'));
     }
 
+    /**
+     * Mise à jour
+     */
     public function update(Request $request, User $user)
     {
-        if (!auth()->check()) {
-            return redirect('/login');
-        }
+        $request->validate([
+            'name'         => 'required|max:255',
+            'identifiant'  => 'required|max:255|unique:users,identifiant,' . $user->id,
+            'telephone'    => 'nullable|max:50',
+            'email'        => 'required|email|unique:users,email,' . $user->id,
+            'role'         => 'required',
+            'statut'       => 'required',
+        ]);
 
-        if (auth()->user()->role !== 'Administrateur') {
-            abort(403);
-        }
-
-        $user->update([
-            'name' => $request->name,
+        $data = [
+            'name'        => $request->name,
             'identifiant' => $request->identifiant,
-            'telephone' => $request->telephone,
-            'email' => $request->email,
-            'role' => $request->role,
-        ]);
+            'telephone'   => $request->telephone,
+            'email'       => $request->email,
+            'role'        => $request->role,
+            'statut'      => $request->statut,
+        ];
 
-        Journal::create([
-            'utilisateur' => auth()->user()->name,
-            'action' => 'Modification utilisateur '.$user->name,
-        ]);
+        if ($request->filled('password')) {
 
-        return redirect()->route('users.index');
+            $request->validate([
+                'password' => 'min:6|confirmed',
+            ]);
+
+            $data['password'] = Hash::make($request->password);
+        }
+
+        $user->update($data);
+
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'Utilisateur modifié avec succès.');
     }
 
+    /**
+     * Suppression
+     */
     public function destroy(User $user)
     {
-        if (!auth()->check()) {
-            return redirect('/login');
-        }
+        if ($user->id === auth()->id()) {
 
-        if (auth()->user()->role !== 'Administrateur') {
-            abort(403);
+            return back()->with(
+                'error',
+                'Vous ne pouvez pas supprimer votre propre compte.'
+            );
         }
-
-        Journal::create([
-            'utilisateur' => auth()->user()->name,
-            'action' => 'Suppression utilisateur '.$user->name,
-        ]);
 
         $user->delete();
 
-        return redirect()->route('users.index');
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'Utilisateur supprimé avec succès.');
     }
 
-    public function block(User $user)
+    /**
+     * Bloquer utilisateur
+     */
+    public function bloquer(User $user)
     {
-        if (!auth()->check()) {
-            return redirect('/login');
-        }
-
-        if (auth()->user()->role !== 'Administrateur') {
-            abort(403);
-        }
-
         $user->update([
             'statut' => 'Bloqué'
         ]);
 
-        Journal::create([
-            'utilisateur' => auth()->user()->name,
-            'action' => 'Blocage utilisateur '.$user->name,
-        ]);
-
-        return redirect()->route('users.index');
+        return back()->with(
+            'success',
+            'Utilisateur bloqué.'
+        );
     }
 
-    public function unblock(User $user)
+    /**
+     * Débloquer utilisateur
+     */
+    public function debloquer(User $user)
     {
-        if (!auth()->check()) {
-            return redirect('/login');
-        }
-
-        if (auth()->user()->role !== 'Administrateur') {
-            abort(403);
-        }
-
         $user->update([
             'statut' => 'Actif'
         ]);
 
-        Journal::create([
-            'utilisateur' => auth()->user()->name,
-            'action' => 'Déblocage utilisateur '.$user->name,
-        ]);
-
-        return redirect()->route('users.index');
-    }
-
-    public function editPassword(User $user)
-    {
-        if (!auth()->check()) {
-            return redirect('/login');
-        }
-
-        if (auth()->user()->role !== 'Administrateur') {
-            abort(403);
-        }
-
-        return view('users.password', compact('user'));
-    }
-
-    public function updatePassword(Request $request, User $user)
-    {
-        if (!auth()->check()) {
-            return redirect('/login');
-        }
-
-        if (auth()->user()->role !== 'Administrateur') {
-            abort(403);
-        }
-
-        $request->validate([
-            'password' => 'required|min:8',
-        ]);
-
-        $user->update([
-            'password' => Hash::make($request->password),
-        ]);
-
-        Journal::create([
-            'utilisateur' => auth()->user()->name,
-            'action' => 'Réinitialisation mot de passe de '.$user->name,
-        ]);
-
-        return redirect()->route('users.index');
+        return back()->with(
+            'success',
+            'Utilisateur débloqué.'
+        );
     }
 }
