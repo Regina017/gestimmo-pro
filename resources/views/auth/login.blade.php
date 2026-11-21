@@ -5,8 +5,7 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Connexion | Gestimmo‑Pro</title>
 
@@ -24,126 +23,79 @@
             justify-content:center;
             align-items:center;
             padding:20px;
-
             background:linear-gradient(
                 135deg,
                 #0f172a,
                 #1e3a8a,
                 #2563eb
             );
-
             font-family:"Segoe UI",sans-serif;
         }
 
         .login-card{
-
             width:100%;
             max-width:500px;
-
             background:rgba(255,255,255,.98);
-
             border:none;
-
             border-radius:20px;
-
             overflow:hidden;
-
             box-shadow:0 20px 45px rgba(0,0,0,.25);
-
         }
 
         .login-header{
-
             text-align:center;
-
             padding:35px;
-
             background:linear-gradient(
                 135deg,
                 #2563eb,
                 #1d4ed8
             );
-
             color:white;
-
         }
 
         .login-header img{
-
             max-height:90px;
-
             margin-bottom:15px;
-
         }
 
         .login-body{
-
             padding:35px;
-
         }
 
         .form-control{
-
             border-radius:12px;
-
             padding:12px;
-
         }
 
         .form-control:focus{
-
             border-color:#2563eb;
-
             box-shadow:0 0 0 .2rem rgba(37,99,235,.15);
-
         }
 
         .btn-login{
-
             border-radius:12px;
-
             padding:12px;
-
             font-weight:600;
-
             transition:.3s;
-
         }
 
         .btn-login:hover{
-
             transform:translateY(-2px);
-
             box-shadow:0 10px 20px rgba(37,99,235,.25);
-
         }
 
         .forgot-link{
-
             font-size:14px;
-
             font-weight:600;
-
             text-decoration:none;
-
-        }
-
-        .forgot-link:hover{
-
-            text-decoration:underline;
-
+            color:#6c757d;
         }
 
         .footer-text{
-
             text-align:center;
-
             margin-top:25px;
-
             color:#6b7280;
-
             font-size:14px;
-
         }
 
     </style>
@@ -286,12 +238,13 @@
 
                 </div>
 
-                <a href="{{ route('password.request') }}"
-                   class="forgot-link">
+                <a href="#"
+                   class="forgot-link"
+                   onclick="return false;">
 
                     <i class="fas fa-key"></i>
 
-                    Mot de passe oublié ?
+                    Mot de passe oublié (bientôt disponible)
 
                 </a>
 
@@ -329,8 +282,7 @@
 
 function togglePassword()
 {
-    let password =
-        document.getElementById('password');
+    let password = document.getElementById('password');
 
     if(password.type === 'password')
     {
