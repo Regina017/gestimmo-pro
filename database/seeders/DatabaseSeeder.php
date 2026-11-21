@@ -12,13 +12,13 @@ class DatabaseSeeder extends Seeder
     {
         User::updateOrCreate(
             [
-                'identifiant' => 'Clement'
+                'identifiant' => 'Clement',
             ],
             [
                 'name'        => 'Clement',
                 'identifiant' => 'Clement',
-                'email'       => 'clement_mathe@hotmail.com',
                 'telephone'   => null,
+                'email'       => 'clement_mathe@hotmail.com',
                 'password'    => Hash::make('Sebastien$1114'),
                 'role'        => 'Administrateur',
                 'statut'      => 'Actif',
