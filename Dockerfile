@@ -10,7 +10,10 @@ RUN apt-get update && apt-get install -y \
     libjpeg62-turbo-dev \
     libfreetype6-dev
 
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+
 RUN docker-php-ext-install \
+    gd \
     pdo \
     pdo_mysql \
     pdo_pgsql \
