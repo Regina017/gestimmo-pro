@@ -9,9 +9,7 @@
         <div class="card-header bg-primary text-white">
 
             <h4 class="mb-0">
-
                 📄 Nouveau contrat
-
             </h4>
 
         </div>
@@ -36,9 +34,8 @@
 
             @endif
 
-            <form
-                action="{{ route('contrats.store') }}"
-                method="POST">
+            <form action="{{ route('contrats.store') }}"
+                  method="POST">
 
                 @csrf
 
@@ -49,15 +46,12 @@
                         <div class="mb-3">
 
                             <label class="form-label">
-
                                 Locataire
-
                             </label>
 
-                            <select
-                                name="locataire_id"
-                                class="form-select"
-                                required>
+                            <select name="locataire_id"
+                                    class="form-select"
+                                    required>
 
                                 <option value="">
                                     -- Sélectionner --
@@ -65,8 +59,8 @@
 
                                 @foreach($locataires as $locataire)
 
-                                    <option
-                                        value="{{ $locataire->id }}">
+                                    <option value="{{ $locataire->id }}"
+                                        {{ old('locataire_id') == $locataire->id ? 'selected' : '' }}>
 
                                         {{ $locataire->nom }}
                                         {{ $locataire->prenom }}
@@ -86,15 +80,12 @@
                         <div class="mb-3">
 
                             <label class="form-label">
-
                                 Logement
-
                             </label>
 
-                            <select
-                                name="logement_id"
-                                class="form-select"
-                                required>
+                            <select name="logement_id"
+                                    class="form-select"
+                                    required>
 
                                 <option value="">
                                     -- Sélectionner --
@@ -102,12 +93,11 @@
 
                                 @foreach($logements as $logement)
 
-                                    <option
-                                        value="{{ $logement->id }}">
+                                    <option value="{{ $logement->id }}"
+                                        {{ old('logement_id') == $logement->id ? 'selected' : '' }}>
 
                                         {{ $logement->numero }}
-                                        -
-                                        {{ $logement->type }}
+                                        - {{ $logement->type }}
 
                                     </option>
 
@@ -128,16 +118,14 @@
                         <div class="mb-3">
 
                             <label class="form-label">
-
                                 Date début
-
                             </label>
 
-                            <input
-                                type="date"
-                                name="date_debut"
-                                class="form-control"
-                                required>
+                            <input type="date"
+                                   name="date_debut"
+                                   class="form-control"
+                                   value="{{ old('date_debut') }}"
+                                   required>
 
                         </div>
 
@@ -148,16 +136,14 @@
                         <div class="mb-3">
 
                             <label class="form-label">
-
                                 Date fin
-
                             </label>
 
-                            <input
-                                type="date"
-                                name="date_fin"
-                                class="form-control"
-                                required>
+                            <input type="date"
+                                   name="date_fin"
+                                   class="form-control"
+                                   value="{{ old('date_fin') }}"
+                                   required>
 
                         </div>
 
@@ -172,17 +158,15 @@
                         <div class="mb-3">
 
                             <label class="form-label">
-
                                 Loyer
-
                             </label>
 
-                            <input
-                                type="number"
-                                step="0.01"
-                                name="loyer"
-                                class="form-control"
-                                required>
+                            <input type="number"
+                                   step="0.01"
+                                   name="loyer"
+                                   class="form-control"
+                                   value="{{ old('loyer') }}"
+                                   required>
 
                         </div>
 
@@ -193,18 +177,15 @@
                         <div class="mb-3">
 
                             <label class="form-label">
-
                                 Caution
-
                             </label>
 
-                            <input
-                                type="number"
-                                step="0.01"
-                                name="caution"
-                                class="form-control"
-                                value="0"
-                                required>
+                            <input type="number"
+                                   step="0.01"
+                                   name="caution"
+                                   class="form-control"
+                                   value="{{ old('caution', 0) }}"
+                                   required>
 
                         </div>
 
@@ -215,24 +196,24 @@
                         <div class="mb-3">
 
                             <label class="form-label">
-
                                 Statut
-
                             </label>
 
-                            <select
-                                name="statut"
-                                class="form-select">
+                            <select name="statut"
+                                    class="form-select">
 
-                                <option value="Actif">
+                                <option value="Actif"
+                                    {{ old('statut') == 'Actif' ? 'selected' : '' }}>
                                     Actif
                                 </option>
 
-                                <option value="Terminé">
+                                <option value="Terminé"
+                                    {{ old('statut') == 'Terminé' ? 'selected' : '' }}>
                                     Terminé
                                 </option>
 
-                                <option value="Suspendu">
+                                <option value="Suspendu"
+                                    {{ old('statut') == 'Suspendu' ? 'selected' : '' }}>
                                     Suspendu
                                 </option>
 
@@ -246,17 +227,15 @@
 
                 <div class="text-end">
 
-                    <a
-                        href="{{ route('contrats.index') }}"
-                        class="btn btn-secondary">
+                    <a href="{{ route('contrats.index') }}"
+                       class="btn btn-secondary">
 
                         Retour
 
                     </a>
 
-                    <button
-                        type="submit"
-                        class="btn btn-success">
+                    <button type="submit"
+                            class="btn btn-success">
 
                         💾 Enregistrer
 
