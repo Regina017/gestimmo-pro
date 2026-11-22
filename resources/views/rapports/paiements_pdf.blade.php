@@ -1,57 +1,55 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<title>Rapport des Paiements</title>
+@extends('layouts.pdf')
 
-<style>
-body{font-family:DejaVu Sans;}
-table{width:100%;border-collapse:collapse;}
-th,td{border:1px solid #ddd;padding:8px;}
-th{background:#f2f2f2;}
-.header{text-align:center;}
-</style>
+@section('content')
 
-</head>
-<body>
-
-@php
-$societe = \App\Models\Societe::first();
-@endphp
-
-<div class="header">
-
-@if($societe && $societe->logo)
-<img src="{{ public_path('storage/'.$societe->logo) }}" width="90">
-@endif
-
-<h2>{{ $societe->nom }}</h2>
-
-</div>
-
-<hr>
-
-<h2>Rapport des Paiements</h2>
+<h1>Rapport des Paiements</h1>
 
 <table>
 
-<tr>
-<th>Date</th>
-<th>Montant</th>
-<th>Mode</th>
-</tr>
+    <thead>
 
-@foreach($paiements as $paiement)
+        <tr>
 
-<tr>
-<td>{{ $paiement->date_paiement }}</td>
-<td>{{ number_format($paiement->montant,2) }} $</td>
-<td>{{ $paiement->mode_paiement }}</td>
-</tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Montant</th>
+            <th>Mode</th>
+            <th>Référence</th>
 
-@endforeach
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+    @foreach($paiements as $paiement)
+
+        <tr>
+
+            <td>{{ $paiement->id }}</td>
+
+            <td>
+                {{ $paiement->date_paiement }}
+            </td>
+
+            <td>
+                {{ number_format($paiement->montant,2,',',' ') }} $
+            </td>
+
+            <td>
+                {{ $paiement->mode_paiement }}
+            </td>
+
+            <td>
+                {{ $paiement->reference }}
+            </td>
+
+        </tr>
+
+    @endforeach
+
+    </tbody>
 
 </table>
 
-</body>
-</html>
+@endsection

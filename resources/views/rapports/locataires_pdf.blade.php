@@ -1,57 +1,43 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<title>Rapport des locataires</title>
+@extends('layouts.pdf')
 
-<style>
-body{font-family:DejaVu Sans;}
-table{width:100%;border-collapse:collapse;}
-th,td{border:1px solid #ddd;padding:8px;}
-th{background:#f2f2f2;}
-.header{text-align:center;}
-</style>
+@section('content')
 
-</head>
-<body>
-
-@php
-$societe = \App\Models\Societe::first();
-@endphp
-
-<div class="header">
-
-@if($societe && $societe->logo)
-<img src="{{ public_path('storage/'.$societe->logo) }}" width="90">
-@endif
-
-<h2>{{ $societe->nom }}</h2>
-
-</div>
-
-<hr>
-
-<h2>Rapport des Locataires</h2>
+<h1>Rapport des Locataires</h1>
 
 <table>
 
-<tr>
-<th>Nom</th>
-<th>Téléphone</th>
-<th>Email</th>
-</tr>
+    <thead>
 
-@foreach($locataires as $locataire)
+        <tr>
 
-<tr>
-<td>{{ $locataire->nom }}</td>
-<td>{{ $locataire->telephone }}</td>
-<td>{{ $locataire->email }}</td>
-</tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Téléphone</th>
+            <th>Email</th>
 
-@endforeach
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+    @foreach($locataires as $locataire)
+
+        <tr>
+
+            <td>{{ $locataire->id }}</td>
+            <td>{{ $locataire->nom }}</td>
+            <td>{{ $locataire->prenom }}</td>
+            <td>{{ $locataire->telephone }}</td>
+            <td>{{ $locataire->email }}</td>
+
+        </tr>
+
+    @endforeach
+
+    </tbody>
 
 </table>
 
-</body>
-</html>
+@endsection
