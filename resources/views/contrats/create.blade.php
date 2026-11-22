@@ -7,14 +7,18 @@
     <div class="card shadow">
 
         <div class="card-header bg-primary text-white">
-
             <h4 class="mb-0">
                 📄 Nouveau contrat
             </h4>
-
         </div>
 
         <div class="card-body">
+
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
 
             @if($errors->any())
 
@@ -34,8 +38,19 @@
 
             @endif
 
-            <form action="{{ route('contrats.store') }}"
-                  method="POST">
+            {{-- Vérification URL --}}
+            <div class="alert alert-warning">
+                URL de soumission :
+                {{ route('contrats.store') }}
+            </div>
+
+            <div class="alert alert-warning">
+    URL de soumission :
+    {{ route('contrats.store') }}
+</div>
+<form action="{{ route('contrats.store') }}"
+                  method="POST"
+                  autocomplete="off">
 
                 @csrf
 
@@ -202,18 +217,15 @@
                             <select name="statut"
                                     class="form-select">
 
-                                <option value="Actif"
-                                    {{ old('statut') == 'Actif' ? 'selected' : '' }}>
+                                <option value="Actif" {{ old('statut', 'Actif') == 'Actif' ? 'selected' : '' }}>
                                     Actif
                                 </option>
 
-                                <option value="Terminé"
-                                    {{ old('statut') == 'Terminé' ? 'selected' : '' }}>
+                                <option value="Terminé" {{ old('statut') == 'Terminé' ? 'selected' : '' }}>
                                     Terminé
                                 </option>
 
-                                <option value="Suspendu"
-                                    {{ old('statut') == 'Suspendu' ? 'selected' : '' }}>
+                                <option value="Suspendu" {{ old('statut') == 'Suspendu' ? 'selected' : '' }}>
                                     Suspendu
                                 </option>
 
@@ -229,9 +241,7 @@
 
                     <a href="{{ route('contrats.index') }}"
                        class="btn btn-secondary">
-
                         Retour
-
                     </a>
 
                     <button type="submit"
