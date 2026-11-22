@@ -10,14 +10,14 @@ class LocatairesExport implements FromCollection, WithHeadings
 {
     public function collection()
     {
-        return Locataire::select(
+        return Locataire::get([
             'id',
             'nom',
             'prenom',
             'telephone',
             'email',
             'created_at'
-        )->get();
+        ]);
     }
 
     public function headings(): array
@@ -28,7 +28,7 @@ class LocatairesExport implements FromCollection, WithHeadings
             'Prénom',
             'Téléphone',
             'Email',
-            'Date création',
+            'Date création'
         ];
     }
 }

@@ -111,13 +111,25 @@ class LocataireController extends Controller
             abort(403);
         }
 
-        $locataire->delete();
+        try {
 
-        return redirect()
-            ->route('locataires.index')
-            ->with(
-                'success',
-                'Locataire supprimé.'
-            );
+            $locataire->delete();
+
+            return redirect()
+                ->route('locataires.index')
+                ->with(
+                    'success',
+                    'Locataire supprimé avec succès.'
+                );
+
+        } catch (\Exception $e) {
+
+            return redirect()
+                ->route('locataires.index')
+                ->with(
+                    'error',
+                    'Impossible de supprimer ce locataire car il est lié à un contrat ou à des données existantes.'
+                );
+        }
     }
 }

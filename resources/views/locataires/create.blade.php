@@ -42,77 +42,89 @@
 
                 <div class="row">
 
-                    <div class="col-md-6">
+                    <div class="col-md-6 mb-3">
 
-                        <div class="mb-3">
+                        <label class="form-label">
+                            Nom
+                        </label>
 
-                            <label class="form-label">
-                                Nom
-                            </label>
-
-                            <input
-                                type="text"
-                                name="nom"
-                                class="form-control"
-                                required>
-
-                        </div>
+                        <input
+                            type="text"
+                            name="nom"
+                            class="form-control"
+                            value="{{ old('nom') }}"
+                            required>
 
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-6 mb-3">
 
-                        <div class="mb-3">
+                        <label class="form-label">
+                            Prénom
+                        </label>
 
-                            <label class="form-label">
-                                Prénom
-                            </label>
-
-                            <input
-                                type="text"
-                                name="prenom"
-                                class="form-control"
-                                required>
-
-                        </div>
+                        <input
+                            type="text"
+                            name="prenom"
+                            class="form-control"
+                            value="{{ old('prenom') }}"
+                            required>
 
                     </div>
 
                 </div>
 
-                <div class="mb-3">
+                <div class="row">
 
-                    <label class="form-label">
-                        Téléphone
-                    </label>
+                    <div class="col-md-6 mb-3">
 
-                    <input
-                        type="text"
-                        name="telephone"
-                        class="form-control">
+                        <label class="form-label">
+                            Téléphone
+                        </label>
+
+                        <input
+                            type="text"
+                            name="telephone"
+                            class="form-control"
+                            value="{{ old('telephone') }}">
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            class="form-control"
+                            value="{{ old('email') }}">
+
+                    </div>
 
                 </div>
 
-                <div class="mb-3">
+                <div class="mt-3">
 
-                    <label class="form-label">
-                        Email
-                    </label>
+                    <button
+                        type="submit"
+                        class="btn btn-success">
 
-                    <input
-                        type="email"
-                        name="email"
-                        class="form-control">
+                        💾 Enregistrer
+
+                    </button>
+
+                    <a
+                        href="{{ route('locataires.index') }}"
+                        class="btn btn-secondary">
+
+                        Retour
+
+                    </a>
 
                 </div>
-
-                <button
-                    type="submit"
-                    class="btn btn-success">
-
-                    💾 Enregistrer
-
-                </button>
 
             </form>
 

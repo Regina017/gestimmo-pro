@@ -10,13 +10,13 @@ class PaiementsExport implements FromCollection, WithHeadings
 {
     public function collection()
     {
-        return Paiement::select(
+        return Paiement::all([
             'id',
             'contrat_id',
             'montant',
             'date_paiement',
             'created_at'
-        )->get();
+        ]);
     }
 
     public function headings(): array
@@ -26,7 +26,7 @@ class PaiementsExport implements FromCollection, WithHeadings
             'Contrat',
             'Montant',
             'Date paiement',
-            'Créé le',
+            'Créé le'
         ];
     }
 }

@@ -10,13 +10,13 @@ class DepensesExport implements FromCollection, WithHeadings
 {
     public function collection()
     {
-        return Depense::select(
+        return Depense::all([
             'id',
             'libelle',
             'montant',
             'date_depense',
             'created_at'
-        )->get();
+        ]);
     }
 
     public function headings(): array
@@ -26,7 +26,7 @@ class DepensesExport implements FromCollection, WithHeadings
             'Libellé',
             'Montant',
             'Date dépense',
-            'Créé le',
+            'Créé le'
         ];
     }
 }
