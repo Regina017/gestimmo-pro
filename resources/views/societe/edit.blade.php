@@ -59,11 +59,12 @@
                                 Nom de la société
                             </label>
 
-                            <input type="text"
-                                   name="nom"
-                                   class="form-control"
-                                   value="{{ old('nom', $societe->nom) }}"
-                                   required>
+                            <input
+                                type="text"
+                                name="nom"
+                                class="form-control"
+                                value="{{ old('nom', $societe->nom) }}"
+                                required>
 
                         </div>
 
@@ -77,10 +78,11 @@
                                 Téléphone
                             </label>
 
-                            <input type="text"
-                                   name="telephone"
-                                   class="form-control"
-                                   value="{{ old('telephone', $societe->telephone) }}">
+                            <input
+                                type="text"
+                                name="telephone"
+                                class="form-control"
+                                value="{{ old('telephone', $societe->telephone) }}">
 
                         </div>
 
@@ -98,10 +100,11 @@
                                 Email
                             </label>
 
-                            <input type="email"
-                                   name="email"
-                                   class="form-control"
-                                   value="{{ old('email', $societe->email) }}">
+                            <input
+                                type="email"
+                                name="email"
+                                class="form-control"
+                                value="{{ old('email', $societe->email) }}">
 
                         </div>
 
@@ -115,10 +118,11 @@
                                 Ville
                             </label>
 
-                            <input type="text"
-                                   name="ville"
-                                   class="form-control"
-                                   value="{{ old('ville', $societe->ville) }}">
+                            <input
+                                type="text"
+                                name="ville"
+                                class="form-control"
+                                value="{{ old('ville', $societe->ville) }}">
 
                         </div>
 
@@ -132,22 +136,38 @@
                         Adresse
                     </label>
 
-                    <textarea name="adresse"
-                              rows="3"
-                              class="form-control">{{ old('adresse', $societe->adresse) }}</textarea>
+                    <textarea
+                        name="adresse"
+                        rows="3"
+                        class="form-control">{{ old('adresse', $societe->adresse) }}</textarea>
 
                 </div>
+
+                <hr>
+
+                <h5 class="mb-3">
+                    🖼 Logo de l'entreprise
+                </h5>
 
                 <div class="mb-3">
 
                     <label class="form-label">
-                        Logo
+                        Nouveau logo
                     </label>
 
-                    <input type="file"
-                           name="logo"
-                           class="form-control"
-                           accept=".jpg,.jpeg,.png,.webp">
+                    <input
+                        type="file"
+                        name="logo"
+                        class="form-control"
+                        accept=".jpg,.jpeg,.png,.webp">
+
+                </div>
+
+                <div class="alert alert-info">
+
+                    <strong>Chemin enregistré :</strong>
+
+                    {{ $societe->logo ?? 'AUCUN LOGO ENREGISTRÉ' }}
 
                 </div>
 
@@ -161,19 +181,36 @@
 
                         <br>
 
-                        <img src="{{ asset('storage/'.$societe->logo) }}"
-                             alt="Logo"
-                             style="
-                                max-width:200px;
-                                max-height:200px;
+                        <img
+                            src="{{ asset('storage/'.$societe->logo) }}"
+                            alt="Logo"
+                            style="
+                                max-width:250px;
+                                max-height:250px;
                                 border:1px solid #ddd;
-                                padding:10px;
                                 background:#fff;
-                             ">
+                                padding:10px;
+                            ">
 
-                        <div class="mt-2 text-muted small">
-                            {{ $societe->logo }}
+                        <div class="mt-3">
+
+                            <a href="{{ asset('storage/'.$societe->logo) }}"
+                               target="_blank"
+                               class="btn btn-outline-primary btn-sm">
+
+                                Tester le logo
+
+                            </a>
+
                         </div>
+
+                    </div>
+
+                @else
+
+                    <div class="alert alert-warning">
+
+                        Aucun logo enregistré.
 
                     </div>
 
@@ -181,8 +218,9 @@
 
                 <div class="text-end">
 
-                    <button type="submit"
-                            class="btn btn-success">
+                    <button
+                        type="submit"
+                        class="btn btn-success">
 
                         💾 Enregistrer
 
