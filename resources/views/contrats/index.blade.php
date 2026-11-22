@@ -62,10 +62,9 @@
 
             {{ session('success') }}
 
-            <button
-                class="btn-close"
-                data-bs-dismiss="alert">
-            </button>
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"></button>
 
         </div>
 
@@ -79,134 +78,139 @@
 
                 <thead class="table-dark">
 
-                <tr>
+                    <tr>
 
-                    <th>ID</th>
+                        <th>ID</th>
 
-                    <th>Date début</th>
+                        <th>Date début</th>
 
-                    <th>Date fin</th>
+                        <th>Date fin</th>
 
-                    <th>Loyer</th>
+                        <th>Loyer</th>
 
-                    <th>Statut</th>
+                        <th>Statut</th>
 
-                    <th width="300">
-                        Actions
-                    </th>
+                        <th width="300">Actions</th>
 
-                </tr>
+                    </tr>
 
                 </thead>
 
                 <tbody>
 
-                @forelse($contrats as $contrat)
+                    @forelse($contrats as $contrat)
 
-                    <tr>
+                        <tr>
 
-                        <td>
-                            {{ $contrat->id }}
-                        </td>
+                            <td>
+                                {{ $contrat->id }}
+                            </td>
 
-                        <td>
-                            {{ $contrat->date_debut }}
-                        </td>
+                            <td>
+                                {{ optional($contrat->date_debut)->format('d/m/Y') ?? $contrat->date_debut }}
+                            </td>
 
-                        <td>
-                            {{ $contrat->date_fin }}
-                        </td>
+                            <td>
+                                {{ optional($contrat->date_fin)->format('d/m/Y') ?? $contrat->date_fin }}
+                            </td>
 
-                        <td class="fw-bold text-success">
+                            <td class="fw-bold text-success">
 
-                            {{ number_format($contrat->loyer, 2) }}
+                                {{ number_format((float)$contrat->loyer, 2, ',', ' ') }} $
 
-                        </td>
+                            </td>
 
-                        <td>
+                            <td>
 
-                            @if($contrat->statut == 'Actif')
+                                @if($contrat->statut === 'Actif')
 
-                                <span class="badge bg-success">
+                                    <span class="badge bg-success">
 
-                                    Actif
+                                        Actif
 
-                                </span>
+                                    </span>
 
-                            @else
+                                @else
 
-                                <span class="badge bg-secondary">
+                                    <span class="badge bg-secondary">
 
-                                    {{ $contrat->statut }}
+                                        {{ $contrat->statut }}
 
-                                </span>
+                                    </span>
 
-                            @endif
+                                @endif
 
-                        </td>
+                            </td>
 
-                        <td>
+                            <td>
 
-                            <a href="{{ route('contrats.show',$contrat) }}"
-                               class="btn btn-info btn-sm">
+                                <a href="{{ route('contrats.show', $contrat) }}"
+                                   class="btn btn-info btn-sm">
 
-                                <i class="fas fa-eye"></i>
+                                    <i class="fas fa-eye"></i>
 
-                            </a>
+                                </a>
 
-                            <a href="{{ route('contrats.edit',$contrat) }}"
-                               class="btn btn-warning btn-sm">
+                                <a href="{{ route('contrats.edit', $contrat) }}"
+                                   class="btn btn-warning btn-sm">
 
-                                <i class="fas fa-pen"></i>
+                                    <i class="fas fa-pen"></i>
 
-                            </a>
+                                </a>
 
-                            <a href="{{ route('contrats.pdf',$contrat) }}"
-                               class="btn btn-secondary btn-sm">
+                                <a href="{{ route('contrats.pdf', $contrat) }}"
+                                   class="btn btn-secondary btn-sm">
 
-                                <i class="fas fa-file-pdf"></i>
+                                    <i class="fas fa-file-pdf"></i>
 
-                            </a>
+                                </a>
 
-                            <form action="{{ route('contrats.destroy',$contrat) }}"
-                                  method="POST"
-                                  class="d-inline">
+                                <form action="{{ route('contrats.destroy', $contrat) }}"
+                                      method="POST"
+                                      class="d-inline">
 
-                                @csrf
-                                @method('DELETE')
+                                    @csrf
 
-                                <button
-                                    class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Supprimer ce contrat ?')">
+                                    @method('DELETE')
 
-                                    <i class="fas fa-trash"></i>
+                                    <button type="submit"
+                                            class="btn btn-danger btn-sm"
+                                            onclick="return confirm('Supprimer ce contrat ?')">
 
-                                </button>
+                                        <i class="fas fa-trash"></i>
 
-                            </form>
+                                    </button>
 
-                        </td>
+                                </form>
 
-                    </tr>
+                            </td>
 
-                @empty
+                        </tr>
 
-                    <tr>
+                    @empty
 
-                        <td colspan="6"
-                            class="text-center">
+                        <tr>
 
-                            Aucun contrat enregistré
+                            <td colspan="6"
+                                class="text-center">
 
-                        </td>
+                                Aucun contrat enregistré
 
-                    </tr>
+                            </td>
 
-                @endforelse
+                        </tr>
+
+                    @endforelse
 
                 </tbody>
 
             </table>
+
+            <div class="mt-3">
+
+                {{ $contrats->links() }}
+
+            </div>
 
         </div>
 

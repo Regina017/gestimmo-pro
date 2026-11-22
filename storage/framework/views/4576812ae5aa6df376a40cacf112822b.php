@@ -1,1 +1,0 @@
-<?php /**PATH C:\laragon\www\gestimmo-pro\resources\views\rapports\create.blade.php ENDPATH**/ ?>

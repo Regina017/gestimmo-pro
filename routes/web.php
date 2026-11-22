@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ImmeubleController;
@@ -34,12 +32,6 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->group(function () {
 
-    /*
-    |--------------------------------------------------------------------------
-    | Dashboard
-    |--------------------------------------------------------------------------
-    */
-
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
@@ -56,6 +48,17 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('locataires', LocataireController::class);
 
     Route::resource('contrats', ContratController::class);
+
+    /*
+    |--------------------------------------------------------------------------
+    | PDF Contrats
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/contrats/{contrat}/pdf',
+        [ContratController::class, 'pdf']
+    )->name('contrats.pdf');
 
     Route::resource('paiements', PaiementController::class);
 
