@@ -16,16 +16,15 @@
         table{
             width:100%;
             border-collapse:collapse;
-            margin-top:20px;
         }
 
-        th, td{
+        th,td{
             border:1px solid #ddd;
             padding:8px;
         }
 
         th{
-            background:#f2f2f2;
+            background:#f5f5f5;
         }
 
         h1{

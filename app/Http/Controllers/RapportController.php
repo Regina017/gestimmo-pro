@@ -7,6 +7,7 @@ use App\Models\Locataire;
 use App\Models\Occupation;
 use App\Models\Paiement;
 use App\Models\Depense;
+use App\Models\Contrat;
 
 use App\Exports\BiensExport;
 use App\Exports\LocatairesExport;
@@ -45,6 +46,23 @@ class RapportController extends Controller
         );
 
         return $pdf->download('rapport_locataires.pdf');
+    }
+
+    public function contratsPdf()
+    {
+        $contrats = Contrat::with([
+            'locataire',
+            'logement'
+        ])->get();
+
+        $pdf = Pdf::loadView(
+            'rapports.contrats_pdf',
+            compact('contrats')
+        );
+
+        return $pdf->download(
+            'rapport_contrats.pdf'
+        );
     }
 
     public function occupationsPdf()
