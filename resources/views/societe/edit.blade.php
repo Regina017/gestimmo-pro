@@ -9,9 +9,7 @@
         <div class="card-header bg-primary text-white">
 
             <h4 class="mb-0">
-
                 ⚙ Paramètres Société
-
             </h4>
 
         </div>
@@ -21,9 +19,7 @@
             @if(session('success'))
 
                 <div class="alert alert-success">
-
                     {{ session('success') }}
-
                 </div>
 
             @endif
@@ -46,10 +42,9 @@
 
             @endif
 
-            <form
-                action="{{ route('societe.update') }}"
-                method="POST"
-                enctype="multipart/form-data">
+            <form action="{{ route('societe.update') }}"
+                  method="POST"
+                  enctype="multipart/form-data">
 
                 @csrf
                 @method('PUT')
@@ -61,17 +56,14 @@
                         <div class="mb-3">
 
                             <label class="form-label">
-
                                 Nom de la société
-
                             </label>
 
-                            <input
-                                type="text"
-                                name="nom"
-                                class="form-control"
-                                value="{{ old('nom', $societe->nom) }}"
-                                required>
+                            <input type="text"
+                                   name="nom"
+                                   class="form-control"
+                                   value="{{ old('nom', $societe->nom) }}"
+                                   required>
 
                         </div>
 
@@ -82,16 +74,13 @@
                         <div class="mb-3">
 
                             <label class="form-label">
-
                                 Téléphone
-
                             </label>
 
-                            <input
-                                type="text"
-                                name="telephone"
-                                class="form-control"
-                                value="{{ old('telephone', $societe->telephone) }}">
+                            <input type="text"
+                                   name="telephone"
+                                   class="form-control"
+                                   value="{{ old('telephone', $societe->telephone) }}">
 
                         </div>
 
@@ -106,16 +95,13 @@
                         <div class="mb-3">
 
                             <label class="form-label">
-
                                 Email
-
                             </label>
 
-                            <input
-                                type="email"
-                                name="email"
-                                class="form-control"
-                                value="{{ old('email', $societe->email) }}">
+                            <input type="email"
+                                   name="email"
+                                   class="form-control"
+                                   value="{{ old('email', $societe->email) }}">
 
                         </div>
 
@@ -126,16 +112,13 @@
                         <div class="mb-3">
 
                             <label class="form-label">
-
                                 Ville
-
                             </label>
 
-                            <input
-                                type="text"
-                                name="ville"
-                                class="form-control"
-                                value="{{ old('ville', $societe->ville) }}">
+                            <input type="text"
+                                   name="ville"
+                                   class="form-control"
+                                   value="{{ old('ville', $societe->ville) }}">
 
                         </div>
 
@@ -146,54 +129,51 @@
                 <div class="mb-3">
 
                     <label class="form-label">
-
                         Adresse
-
                     </label>
 
-                    <textarea
-                        name="adresse"
-                        rows="3"
-                        class="form-control">{{ old('adresse', $societe->adresse) }}</textarea>
+                    <textarea name="adresse"
+                              rows="3"
+                              class="form-control">{{ old('adresse', $societe->adresse) }}</textarea>
 
                 </div>
 
                 <div class="mb-3">
 
                     <label class="form-label">
-
                         Logo
-
                     </label>
 
-                    <input
-                        type="file"
-                        name="logo"
-                        class="form-control">
+                    <input type="file"
+                           name="logo"
+                           class="form-control"
+                           accept=".jpg,.jpeg,.png,.webp">
 
                 </div>
 
-                @if($societe->logo)
+                @if(!empty($societe->logo))
 
                     <div class="mb-4">
 
                         <label class="form-label">
-
                             Logo actuel
-
                         </label>
 
                         <br>
 
-                        <img
-                            src="{{ asset('storage/'.$societe->logo) }}"
-                            alt="Logo"
-                            style="
+                        <img src="{{ asset('storage/'.$societe->logo) }}"
+                             alt="Logo"
+                             style="
                                 max-width:200px;
+                                max-height:200px;
                                 border:1px solid #ddd;
                                 padding:10px;
                                 background:#fff;
-                            ">
+                             ">
+
+                        <div class="mt-2 text-muted small">
+                            {{ $societe->logo }}
+                        </div>
 
                     </div>
 
@@ -201,9 +181,8 @@
 
                 <div class="text-end">
 
-                    <button
-                        type="submit"
-                        class="btn btn-success">
+                    <button type="submit"
+                            class="btn btn-success">
 
                         💾 Enregistrer
 

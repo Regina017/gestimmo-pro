@@ -18,12 +18,12 @@ class SocieteController extends Controller
         if (!$societe) {
 
             $societe = Societe::create([
-                'nom'        => 'BÂTIMENTS MATHE SEBASTIEN',
-                'telephone'  => '',
-                'email'      => '',
-                'adresse'    => '',
-                'ville'      => '',
-                'logo'       => null,
+                'nom'       => 'BÂTIMENTS MATHE SEBASTIEN',
+                'telephone' => '',
+                'email'     => '',
+                'adresse'   => '',
+                'ville'     => '',
+                'logo'      => null,
             ]);
         }
 
@@ -39,18 +39,17 @@ class SocieteController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'nom'        => 'required|string|max:255',
-            'telephone'  => 'nullable|string|max:50',
-            'email'      => 'nullable|email|max:255',
-            'adresse'    => 'nullable|string|max:255',
-            'ville'      => 'nullable|string|max:255',
-            'logo'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'nom'       => 'required|string|max:255',
+            'telephone' => 'nullable|string|max:50',
+            'email'     => 'nullable|email|max:255',
+            'adresse'   => 'nullable|string|max:255',
+            'ville'     => 'nullable|string|max:255',
+            'logo'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $societe = Societe::first();
 
         if (!$societe) {
-
             $societe = new Societe();
         }
 
@@ -60,32 +59,22 @@ class SocieteController extends Controller
         $societe->adresse   = $request->adresse;
         $societe->ville     = $request->ville;
 
-        /*
-        |--------------------------------------------------------------------------
-        | UPLOAD LOGO
-        |--------------------------------------------------------------------------
-        */
-
         if ($request->hasFile('logo')) {
 
             if (
-                !empty($societe->logo)
-                && Storage::disk('public')->exists($societe->logo)
+                $societe->logo &&
+                Storage::disk('public')->exists($societe->logo)
             ) {
-
                 Storage::disk('public')->delete(
                     $societe->logo
                 );
             }
 
-            $logo = $request
+            $path = $request
                 ->file('logo')
-                ->store(
-                    'logos',
-                    'public'
-                );
+                ->store('logos', 'public');
 
-            $societe->logo = $logo;
+            $societe->logo = $path;
         }
 
         $societe->save();
