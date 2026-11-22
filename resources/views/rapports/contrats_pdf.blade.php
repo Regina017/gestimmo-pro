@@ -22,7 +22,7 @@
         }
 
         .logo{
-            width:120px;
+            width:160px;
             height:auto;
             margin-bottom:15px;
         }
@@ -73,16 +73,19 @@
 
     $societe = \App\Models\Societe::first();
 
-    $logo = null;
+    $logoPath = null;
 
-    if ($societe && !empty($societe->logo)) {
+    if (
+        $societe &&
+        !empty($societe->logo)
+    ) {
 
-        $logoPath = public_path(
-            'storage/'.$societe->logo
+        $storageLogo = storage_path(
+            'app/public/' . $societe->logo
         );
 
-        if (file_exists($logoPath)) {
-            $logo = $logoPath;
+        if (file_exists($storageLogo)) {
+            $logoPath = $storageLogo;
         }
     }
 
@@ -90,10 +93,10 @@
 
 <div class="header">
 
-    @if($logo)
+    @if($logoPath)
 
         <img
-            src="{{ $logo }}"
+            src="{{ $logoPath }}"
             alt="Logo"
             class="logo">
 
@@ -160,41 +163,28 @@
                 </td>
 
                 <td>
-
                     {{ $contrat->locataire->nom ?? '' }}
-
                     {{ $contrat->locataire->prenom ?? '' }}
-
                 </td>
 
                 <td>
-
                     {{ $contrat->logement->numero ?? '' }}
-
                 </td>
 
                 <td>
-
                     {{ \Carbon\Carbon::parse($contrat->date_debut)->format('d/m/Y') }}
-
                 </td>
 
                 <td>
-
                     {{ \Carbon\Carbon::parse($contrat->date_fin)->format('d/m/Y') }}
-
                 </td>
 
                 <td>
-
                     {{ number_format($contrat->loyer, 2, ',', ' ') }} $
-
                 </td>
 
                 <td>
-
                     {{ $contrat->statut }}
-
                 </td>
 
             </tr>
@@ -203,7 +193,7 @@
 
             <tr>
 
-                <td colspan="7" style="text-align:center;">
+                <td colspan="7" style="text-align:center">
 
                     Aucun contrat enregistré
 
