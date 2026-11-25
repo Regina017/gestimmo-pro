@@ -7,6 +7,7 @@ use App\Models\Logement;
 use App\Models\Locataire;
 use App\Models\Contrat;
 use App\Models\Paiement;
+use App\Models\Depense;
 
 class DashboardController extends Controller
 {
@@ -18,9 +19,11 @@ class DashboardController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $nbImmeubles = Immeuble::count();
-        $nbLogements = Logement::count();
-        $nbLocataires = Locataire::count();
+        $totalImmeubles = Immeuble::count();
+
+        $totalBiens = Logement::count();
+
+        $totalLocataires = Locataire::count();
 
         /*
         |--------------------------------------------------------------------------
@@ -33,21 +36,18 @@ class DashboardController extends Controller
             'Actif'
         )->get();
 
-        $nbContrats = $contratsActifs->count();
+        $totalContrats = $contratsActifs->count();
 
         /*
         |--------------------------------------------------------------------------
-        | Logements
+        | Logements vacants
         |--------------------------------------------------------------------------
         */
 
-        $logementsOccupes = $nbContrats;
-
-        $logementsLibres =
-            max(
-                0,
-                $nbLogements - $logementsOccupes
-            );
+        $logementsVacants = max(
+            0,
+            $totalBiens - $totalContrats
+        );
 
         /*
         |--------------------------------------------------------------------------
@@ -55,15 +55,39 @@ class DashboardController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $revenusMois = Paiement::whereMonth(
-                'date_paiement',
-                now()->month
-            )
-            ->whereYear(
-                'date_paiement',
-                now()->year
-            )
-            ->sum('montant');
+        $revenus = Paiement::whereMonth(
+            'date_paiement',
+            now()->month
+        )
+        ->whereYear(
+            'date_paiement',
+            now()->year
+        )
+        ->sum('montant');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Dépenses du mois
+        |--------------------------------------------------------------------------
+        */
+
+        $depenses = Depense::whereMonth(
+            'date_depense',
+            now()->month
+        )
+        ->whereYear(
+            'date_depense',
+            now()->year
+        )
+        ->sum('montant');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Bénéfice
+        |--------------------------------------------------------------------------
+        */
+
+        $benefice = $revenus - $depenses;
 
         /*
         |--------------------------------------------------------------------------
@@ -71,12 +95,13 @@ class DashboardController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $loyersAttendus =
-            $contratsActifs->sum('loyer');
+        $loyersAttendus = $contratsActifs->sum(
+            'loyer'
+        );
 
         /*
         |--------------------------------------------------------------------------
-        | Loyers impayés
+        | Impayés
         |--------------------------------------------------------------------------
         */
 
@@ -84,83 +109,84 @@ class DashboardController extends Controller
 
         foreach ($contratsActifs as $contrat) {
 
-            $paiement = Paiement::where(
-                    'contrat_id',
-                    $contrat->id
-                )
-                ->whereMonth(
-                    'date_paiement',
-                    now()->month
-                )
-                ->whereYear(
-                    'date_paiement',
-                    now()->year
-                )
-                ->first();
+            $paiementExiste = Paiement::where(
+                'contrat_id',
+                $contrat->id
+            )
+            ->whereMonth(
+                'date_paiement',
+                now()->month
+            )
+            ->whereYear(
+                'date_paiement',
+                now()->year
+            )
+            ->exists();
 
-            if (! $paiement) {
+            if (!$paiementExiste) {
                 $impayes++;
             }
         }
 
         /*
         |--------------------------------------------------------------------------
-        | Contrats expirant sous 30 jours
+        | Contrats expirants
         |--------------------------------------------------------------------------
         */
 
-        $contratsExpirant = Contrat::whereDate(
-                'date_fin',
-                '<=',
-                now()->addDays(30)
-            )
-            ->whereDate(
-                'date_fin',
-                '>=',
-                now()
-            )
-            ->get();
+        $contratsExpirantListe = Contrat::whereDate(
+            'date_fin',
+            '<=',
+            now()->addDays(30)
+        )
+        ->whereDate(
+            'date_fin',
+            '>=',
+            now()
+        )
+        ->get();
+
+        $contratsExpirants =
+            $contratsExpirantListe->count();
 
         /*
         |--------------------------------------------------------------------------
-        | NOUVEAU V1.2
-        | Échéances dans les 7 jours
+        | Échéances sous 7 jours
         |--------------------------------------------------------------------------
         */
 
         $echeancesLoyer = Contrat::where(
-                'statut',
-                'Actif'
-            )
-            ->whereDate(
-                'date_fin',
-                '<=',
-                now()->addDays(7)
-            )
-            ->whereDate(
-                'date_fin',
-                '>=',
-                now()
-            )
-            ->count();
+            'statut',
+            'Actif'
+        )
+        ->whereDate(
+            'date_fin',
+            '<=',
+            now()->addDays(7)
+        )
+        ->whereDate(
+            'date_fin',
+            '>=',
+            now()
+        )
+        ->count();
 
         /*
         |--------------------------------------------------------------------------
-        | NOUVEAU V1.2
         | Contrats expirés
         |--------------------------------------------------------------------------
         */
 
         $contratsEnRetard = Contrat::where(
-                'statut',
-                'Actif'
-            )
-            ->whereDate(
-                'date_fin',
-                '<',
-                now()
-            )
-            ->count();
+            'statut',
+            'Actif'
+        )
+        ->whereDate(
+            'date_fin',
+            '<',
+            now()
+        )
+        ->count();
 
         /*
         |--------------------------------------------------------------------------
@@ -174,33 +200,20 @@ class DashboardController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | Données financières
-        |--------------------------------------------------------------------------
-        */
-
-        $revenus = $revenusMois;
-
-        $depenses = 0;
-
-        $benefice =
-            $revenus - $depenses;
-
-        /*
-        |--------------------------------------------------------------------------
         | Notifications
         |--------------------------------------------------------------------------
         */
 
         $totalNotifications =
-            $impayes
-            + $contratsExpirant->count()
-            + $logementsLibres
-            + $echeancesLoyer
-            + $contratsEnRetard;
+            $impayes +
+            $contratsExpirants +
+            $logementsVacants +
+            $echeancesLoyer +
+            $contratsEnRetard;
 
         /*
         |--------------------------------------------------------------------------
-        | Graphique impayés
+        | Courbe impayés
         |--------------------------------------------------------------------------
         */
 
@@ -208,91 +221,53 @@ class DashboardController extends Controller
 
         for ($mois = 1; $mois <= 12; $mois++) {
 
-            $nbImpayesMois = 0;
+            $nbImpayes = 0;
 
             foreach ($contratsActifs as $contrat) {
 
-                $paiementMois = Paiement::where(
-                        'contrat_id',
-                        $contrat->id
-                    )
-                    ->whereMonth(
-                        'date_paiement',
-                        $mois
-                    )
-                    ->whereYear(
-                        'date_paiement',
-                        now()->year
-                    )
-                    ->first();
+                $paiementTrouve = Paiement::where(
+                    'contrat_id',
+                    $contrat->id
+                )
+                ->whereMonth(
+                    'date_paiement',
+                    $mois
+                )
+                ->whereYear(
+                    'date_paiement',
+                    now()->year
+                )
+                ->exists();
 
-                if (! $paiementMois) {
-
-                    $nbImpayesMois++;
+                if (!$paiementTrouve) {
+                    $nbImpayes++;
                 }
             }
 
-            $impayesParMois[] =
-                $nbImpayesMois;
+            $impayesParMois[] = $nbImpayes;
         }
 
         return view(
             'dashboard.index',
-            [
-
-                'totalBiens' => $nbLogements,
-                'totalLocataires' => $nbLocataires,
-                'totalImmeubles' => $nbImmeubles,
-                'totalContrats' => $nbContrats,
-
-                'revenus' => $revenus,
-                'depenses' => $depenses,
-                'benefice' => $benefice,
-
-                'impayes' => $impayes,
-
-                'contratsExpirants' =>
-                    $contratsExpirant->count(),
-
-                'logementsVacants' =>
-                    $logementsLibres,
-
-                'totalNotifications' =>
-                    $totalNotifications,
-
-                'echeancesLoyer' =>
-                    $echeancesLoyer,
-
-                'contratsEnRetard' =>
-                    $contratsEnRetard,
-
-                'nbLocataires' =>
-                    $nbLocataires,
-
-                'nbLogements' =>
-                    $nbLogements,
-
-                'nbImmeubles' =>
-                    $nbImmeubles,
-
-                'nbContrats' =>
-                    $nbContrats,
-
-                'revenusMois' =>
-                    $revenusMois,
-
-                'loyersAttendus' =>
-                    $loyersAttendus,
-
-                'paiementsRecents' =>
-                    $paiementsRecents,
-
-                'contratsExpirantListe' =>
-                    $contratsExpirant,
-
-                'impayesParMois' =>
-                    $impayesParMois,
-            ]
+            compact(
+                'totalImmeubles',
+                'totalBiens',
+                'totalLocataires',
+                'totalContrats',
+                'revenus',
+                'depenses',
+                'benefice',
+                'impayes',
+                'contratsExpirants',
+                'logementsVacants',
+                'totalNotifications',
+                'echeancesLoyer',
+                'contratsEnRetard',
+                'paiementsRecents',
+                'impayesParMois',
+                'loyersAttendus',
+                'contratsExpirantListe'
+            )
         );
     }
 }

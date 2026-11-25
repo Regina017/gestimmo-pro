@@ -55,10 +55,10 @@ class ContratController extends Controller
             'locataire_id' => 'required|exists:locataires,id',
             'logement_id'  => 'required|exists:logements,id',
             'date_debut'   => 'required|date',
-            'date_fin'     => 'required|date',
+            'date_fin'     => 'required|date|after_or_equal:date_debut',
             'loyer'        => 'required|numeric|min:0',
-            'caution'      => 'required|numeric|min:0',
-            'statut'       => 'required'
+            'caution'      => 'nullable|numeric|min:0',
+            'statut'       => 'required',
         ]);
 
         Contrat::create([
@@ -126,10 +126,10 @@ class ContratController extends Controller
             'locataire_id' => 'required|exists:locataires,id',
             'logement_id'  => 'required|exists:logements,id',
             'date_debut'   => 'required|date',
-            'date_fin'     => 'required|date',
+            'date_fin'     => 'required|date|after_or_equal:date_debut',
             'loyer'        => 'required|numeric|min:0',
-            'caution'      => 'required|numeric|min:0',
-            'statut'       => 'required'
+            'caution'      => 'nullable|numeric|min:0',
+            'statut'       => 'required',
         ]);
 
         $contrat->update([
@@ -155,38 +155,85 @@ class ContratController extends Controller
      */
     public function destroy(Contrat $contrat)
     {
-        $contrat->delete();
+        try {
 
-        return redirect()
-            ->route('contrats.index')
-            ->with(
-                'success',
-                'Contrat supprimé.'
-            );
+            $contrat->delete();
+
+            return redirect()
+                ->route('contrats.index')
+                ->with(
+                    'success',
+                    'Contrat supprimé avec succès.'
+                );
+
+        } catch (\Exception $e) {
+
+            return redirect()
+                ->route('contrats.index')
+                ->with(
+                    'error',
+                    'Impossible de supprimer ce contrat.'
+                );
+        }
     }
 
     /**
      * PDF du contrat
      */
-    public function pdf(Contrat $contrat)
-    {
-        $contrat->load([
-            'locataire',
-            'logement'
-        ]);
+ public function pdf(Contrat $contrat)
+{
+    $contrat->load([
+        'locataire',
+        'logement'
+    ]);
 
-        $pdf = Pdf::loadView(
-            'contrats.pdf',
-            compact('contrat')
-        );
+    $logoBase64 = $this->getLogoBase64();
 
-        $pdf->setPaper(
-            'a4',
-            'portrait'
-        );
+    $pdf = Pdf::loadView(
+        'contrats.pdf',
+        compact(
+            'contrat',
+            'logoBase64'
+        )
+    );
 
-        return $pdf->stream(
-            'Contrat-' . $contrat->id . '.pdf'
-        );
+    $pdf->setPaper(
+        'A4',
+        'portrait'
+    );
+
+    return $pdf->stream(
+        'Contrat-' . $contrat->id . '.pdf'
+    );
+}
+
+private function getLogoBase64()
+{
+    $societe = \App\Models\Societe::first();
+
+    if (!$societe || empty($societe->logo)) {
+        return null;
     }
+
+    $path = public_path(
+        'storage/' . $societe->logo
+    );
+
+    if (!file_exists($path)) {
+        return null;
+    }
+
+    $extension = strtolower(
+        pathinfo(
+            $path,
+            PATHINFO_EXTENSION
+        )
+    );
+
+    return 'data:image/' .
+        $extension .
+        ';base64,' .
+        base64_encode(
+            file_get_contents($path)
+        );
 }

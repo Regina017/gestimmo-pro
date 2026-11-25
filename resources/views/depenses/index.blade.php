@@ -4,6 +4,12 @@
 
 <div class="container-fluid">
 
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <div class="card shadow-sm border-0 mb-4">
 
         <div class="card-body">
@@ -13,17 +19,12 @@
                 <div>
 
                     <h2 class="fw-bold mb-0">
-
                         <i class="fas fa-receipt text-danger"></i>
-
                         Gestion des Dépenses
-
                     </h2>
 
                     <small class="text-muted">
-
                         Suivi des dépenses de l'entreprise
-
                     </small>
 
                 </div>
@@ -34,7 +35,6 @@
                        class="btn btn-success">
 
                         <i class="fas fa-file-excel"></i>
-
                         Export Excel
 
                     </a>
@@ -43,7 +43,6 @@
                        class="btn btn-primary">
 
                         <i class="fas fa-plus"></i>
-
                         Nouvelle dépense
 
                     </a>
@@ -64,23 +63,27 @@
 
                 <thead class="table-dark">
 
-                <tr>
+                    <tr>
 
-                    <th>Date</th>
+                        <th>Date</th>
 
-                    <th>Catégorie</th>
+                        <th>Catégorie</th>
 
-                    <th>Libellé</th>
+                        <th>Libellé</th>
 
-                    <th>Montant</th>
+                        <th>Montant</th>
 
-                </tr>
+                        <th width="250">
+                            Actions
+                        </th>
+
+                    </tr>
 
                 </thead>
 
                 <tbody>
 
-                @forelse($depenses as $depense)
+                    @forelse($depenses as $depense)
 
                     <tr>
 
@@ -99,18 +102,51 @@
                         </td>
 
                         <td class="fw-bold text-danger">
+                            {{ number_format($depense->montant,2,',',' ') }}
+                        </td>
 
-                            {{ number_format($depense->montant,2) }}
+                        <td>
+
+                            <a href="{{ route('depenses.show',$depense) }}"
+                               class="btn btn-info btn-sm">
+
+                                Voir
+
+                            </a>
+
+                            <a href="{{ route('depenses.edit',$depense) }}"
+                               class="btn btn-warning btn-sm">
+
+                                Modifier
+
+                            </a>
+
+                            <form action="{{ route('depenses.destroy',$depense) }}"
+                                  method="POST"
+                                  class="d-inline">
+
+                                @csrf
+                                @method('DELETE')
+
+                                <button
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Supprimer cette dépense ?')">
+
+                                    Supprimer
+
+                                </button>
+
+                            </form>
 
                         </td>
 
                     </tr>
 
-                @empty
+                    @empty
 
                     <tr>
 
-                        <td colspan="4" class="text-center">
+                        <td colspan="5" class="text-center">
 
                             Aucune dépense enregistrée
 
@@ -118,7 +154,7 @@
 
                     </tr>
 
-                @endforelse
+                    @endforelse
 
                 </tbody>
 

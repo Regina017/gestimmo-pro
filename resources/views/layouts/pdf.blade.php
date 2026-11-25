@@ -93,41 +93,59 @@
 </head>
 
 <body>
-
-@php
-
-    $societe = \App\Models\Societe::first();
-
-    $logoPath = null;
-
-    if (
-        $societe &&
-        !empty($societe->logo)
-    ) {
-
-        $storageLogo = storage_path(
-            'app/public/' . $societe->logo
-        );
-
-        if (file_exists($storageLogo)) {
-
-            $logoPath = $storageLogo;
-
-        }
-    }
-
-@endphp
+    <div style="color:red;font-size:30px;">
+    TEST PDF LAYOUT
+</div>
+    @if(!empty($logoBase64))
+    <img
+        src="{{ $logoBase64 }}"
+        alt="Logo"
+        class="logo">
+@endif
 
 <div class="header">
 
-    @if($logoPath)
+  <div style="margin-bottom:20px;">
+@php
+    $societe = \App\Models\Societe::first();
+    @php
 
-        <img
-            src="{{ $logoPath }}"
-            alt="Logo"
-            class="logo">
+$testStorage = storage_path(
+    'app/public/' . ($societe->logo ?? '')
+);
 
-    @endif
+$testPublic = public_path(
+    'storage/' . ($societe->logo ?? '')
+);
+
+@endphp
+
+<div style="font-size:14px;color:red;">
+    TEST STORAGE :
+    {{ file_exists($testStorage) ? 'OUI' : 'NON' }}
+</div>
+
+<div style="font-size:14px;color:red;">
+    TEST PUBLIC :
+    {{ file_exists($testPublic) ? 'OUI' : 'NON' }}
+</div>
+
+    $test1 = storage_path('app/public/' . $societe->logo);
+    $test2 = public_path('storage/' . $societe->logo);
+@endphp
+
+<div>
+    TEST STORAGE :
+    {{ file_exists($test1) ? 'OUI' : 'NON' }}
+</div>
+
+<div>
+    TEST PUBLIC :
+    {{ file_exists($test2) ? 'OUI' : 'NON' }}
+</div>
+
+
+</div>
 
     <div class="societe">
 
@@ -136,19 +154,27 @@
         </h2>
 
         @if(!empty($societe->adresse))
-            <div>{{ $societe->adresse }}</div>
+            <div>
+                {{ $societe->adresse }}
+            </div>
         @endif
 
         @if(!empty($societe->ville))
-            <div>{{ $societe->ville }}</div>
+            <div>
+                {{ $societe->ville }}
+            </div>
         @endif
 
         @if(!empty($societe->telephone))
-            <div>Tél : {{ $societe->telephone }}</div>
+            <div>
+                Tél : {{ $societe->telephone }}
+            </div>
         @endif
 
         @if(!empty($societe->email))
-            <div>{{ $societe->email }}</div>
+            <div>
+                {{ $societe->email }}
+            </div>
         @endif
 
     </div>
@@ -176,5 +202,4 @@
 </div>
 
 </body>
-
 </html>

@@ -1,44 +1,33 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Exports;
 
-use App\Exports\LocatairesExport;
-use App\Exports\ContratsExport;
-use App\Exports\PaiementsExport;
-use App\Exports\DepensesExport;
-use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Depense;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class ExportController extends Controller
+class DepensesExport implements FromCollection, WithHeadings
 {
-    public function locataires()
+    public function collection(): Collection
     {
-        return Excel::download(
-            new LocatairesExport(),
-            'locataires.xlsx'
-        );
+        return Depense::select(
+            'id',
+            'libelle',
+            'montant',
+            'date_depense',
+            'created_at'
+        )->get();
     }
 
-    public function contrats()
+    public function headings(): array
     {
-        return Excel::download(
-            new ContratsExport(),
-            'contrats.xlsx'
-        );
-    }
-
-    public function paiements()
-    {
-        return Excel::download(
-            new PaiementsExport(),
-            'paiements.xlsx'
-        );
-    }
-
-    public function depenses()
-    {
-        return Excel::download(
-            new DepensesExport(),
-            'depenses.xlsx'
-        );
+        return [
+            'ID',
+            'Libellé',
+            'Montant',
+            'Date dépense',
+            'Créé le',
+        ];
     }
 }

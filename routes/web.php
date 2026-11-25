@@ -35,12 +35,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Gestion immobilière
-    |--------------------------------------------------------------------------
-    */
-
     Route::resource('immeubles', ImmeubleController::class);
 
     Route::resource('logements', LogementController::class);
@@ -48,12 +42,6 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('locataires', LocataireController::class);
 
     Route::resource('contrats', ContratController::class);
-
-    /*
-    |--------------------------------------------------------------------------
-    | PDF Contrats
-    |--------------------------------------------------------------------------
-    */
 
     Route::get(
         '/contrats/{contrat}/pdf',
@@ -63,12 +51,6 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('paiements', PaiementController::class);
 
     Route::resource('depenses', DepenseController::class);
-
-    /*
-    |--------------------------------------------------------------------------
-    | Exports Excel
-    |--------------------------------------------------------------------------
-    */
 
     Route::get(
         '/export/locataires',
@@ -90,12 +72,6 @@ Route::middleware(['auth'])->group(function () {
         [ExportController::class, 'depenses']
     )->name('export.depenses');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Reçus et Quittances
-    |--------------------------------------------------------------------------
-    */
-
     Route::get(
         '/paiements/{paiement}/recu',
         [PaiementController::class, 'recu']
@@ -105,12 +81,6 @@ Route::middleware(['auth'])->group(function () {
         '/paiements/{paiement}/quittance',
         [PaiementController::class, 'quittance']
     )->name('paiements.quittance');
-
-    /*
-    |--------------------------------------------------------------------------
-    | Rapports PDF
-    |--------------------------------------------------------------------------
-    */
 
     Route::prefix('rapports')
         ->name('rapports.')
@@ -135,12 +105,6 @@ Route::middleware(['auth'])->group(function () {
                 ->name('depenses');
         });
 
-    /*
-    |--------------------------------------------------------------------------
-    | Société
-    |--------------------------------------------------------------------------
-    */
-
     Route::get(
         '/societe',
         [SocieteController::class, 'edit']
@@ -158,10 +122,7 @@ Route::middleware(['auth'])->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::middleware([
-    'auth',
-    'role:Administrateur'
-])->group(function () {
+Route::middleware(['auth'])->group(function () {
 
     Route::resource('users', UserController::class);
 

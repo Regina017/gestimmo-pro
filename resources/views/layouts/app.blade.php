@@ -148,21 +148,29 @@
 
 <div class="sidebar">
 
-    <div class="logo">
+@php
+    $societe = \App\Models\Societe::first();
+@endphp
 
-        @if(isset($societe) && !empty($societe->logo))
+<div class="logo">
 
-            <img
-                src="{{ asset('storage/' . $societe->logo) }}"
-                height="70"
-                class="mb-2">
+    @if($societe && !empty($societe->logo))
 
-        @endif
+        <img
+            src="{{ url('/storage/' . $societe->logo) }}"
+            alt="Logo"
+            style="
+                max-height:70px;
+                width:auto;
+                display:block;
+                margin:0 auto 10px auto;
+            ">
 
-        <h4>Gestimmo‑Pro</h4>
+    @endif
 
-    </div>
+    <h4>Gestimmo‑Pro</h4>
 
+</div>
     <nav class="mt-3">
 
         <a href="{{ route('dashboard') }}"

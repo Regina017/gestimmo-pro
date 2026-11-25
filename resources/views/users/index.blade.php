@@ -54,116 +54,127 @@
 
                 @forelse($users as $user)
 
-                    <tr>
+ <tr>
 
-                        <td>{{ $user->id }}</td>
+    <td>{{ $user->id }}</td>
 
-                        <td>{{ $user->name }}</td>
+    <td>{{ $user->name }}</td>
 
-                        <td>{{ $user->identifiant }}</td>
+    <td>{{ $user->identifiant }}</td>
 
-                        <td>{{ $user->email }}</td>
+    <td>{{ $user->email }}</td>
 
-                        <td>{{ $user->telephone }}</td>
+    <td>{{ $user->telephone }}</td>
 
-                        <td>
+    <td>
 
-                            @if($user->role == 'Administrateur')
-                                <span class="badge bg-danger">
-                                    Administrateur
-                                </span>
-                            @elseif($user->role == 'Utilisateur')
-                                <span class="badge bg-primary">
-                                    Utilisateur
-                                </span>
-                            @else
-                                <span class="badge bg-secondary">
-                                    Consultation
-                                </span>
-                            @endif
+        @if($user->role == 'Administrateur')
 
-                        </td>
+            <span class="badge bg-danger">
+                Administrateur
+            </span>
 
-                        <td>
+        @elseif($user->role == 'Utilisateur')
 
-                            @if($user->statut == 'Actif')
-                                <span class="badge bg-success">
-                                    Actif
-                                </span>
-                            @else
-                                <span class="badge bg-danger">
-                                    Bloqué
-                                </span>
-                            @endif
+            <span class="badge bg-primary">
+                Utilisateur
+            </span>
 
-                        </td>
+        @else
 
-                        <td>
+            <span class="badge bg-secondary">
+                Consultation
+            </span>
 
-                            <a href="{{ route('users.edit',$user) }}"
-                               class="btn btn-warning btn-sm">
-                                Modifier
-                            </a>
+        @endif
 
-                            @if($user->statut == 'Actif')
+    </td>
 
-                                <form
-                                    action="{{ route('users.bloquer',$user) }}"
-                                    method="POST"
-                                    class="d-inline">
+    <td>
 
-                                    @csrf
-                                    @method('PUT')
+        @if($user->statut == 'Actif')
 
-                                    <button class="btn btn-secondary btn-sm">
-                                        Bloquer
-                                    </button>
+            <span class="badge bg-success">
+                Actif
+            </span>
 
-                                </form>
+        @else
 
-                            @else
+            <span class="badge bg-danger">
+                Bloqué
+            </span>
 
-                                <form
-                                    action="{{ route('users.debloquer',$user) }}"
-                                    method="POST"
-                                    class="d-inline">
+        @endif
 
-                                    @csrf
-                                    @method('PUT')
+    </td>
 
-                                    <button class="btn btn-success btn-sm">
-                                        Débloquer
-                                    </button>
+    <td>
 
-                                </form>
+        <a href="{{ route('users.show', $user) }}"
+           class="btn btn-info btn-sm">
+            Voir
+        </a>
 
-                            @endif
+        <a href="{{ route('users.edit',$user) }}"
+           class="btn btn-warning btn-sm">
+            Modifier
+        </a>
 
-                            <form
-                                action="{{ route('users.destroy',$user) }}"
-                                method="POST"
-                                class="d-inline">
+        @if($user->statut == 'Actif')
 
-                                @csrf
-                                @method('DELETE')
+            <form
+                action="{{ route('users.bloquer',$user) }}"
+                method="POST"
+                class="d-inline">
 
-                                <button
-                                    onclick="return confirm('Supprimer cet utilisateur ?')"
-                                    class="btn btn-danger btn-sm">
+                @csrf
+                @method('PUT')
 
-                                    Supprimer
+                <button class="btn btn-secondary btn-sm">
+                    Bloquer
+                </button>
 
-                                </button>
+            </form>
 
-                            </form>
+        @else
 
-                        </td>
+            <form
+                action="{{ route('users.debloquer',$user) }}"
+                method="POST"
+                class="d-inline">
 
-                    </tr>
+                @csrf
+                @method('PUT')
 
-                @empty
+                <button class="btn btn-success btn-sm">
+                    Débloquer
+                </button>
 
-                    <tr>
+            </form>
+
+        @endif
+
+        <form
+            action="{{ route('users.destroy',$user) }}"
+            method="POST"
+            class="d-inline">
+
+            @csrf
+            @method('DELETE')
+
+            <button
+                onclick="return confirm('Supprimer cet utilisateur ?')"
+                class="btn btn-danger btn-sm">
+
+                Supprimer
+
+            </button>
+
+        </form>
+
+    </td>
+
+</tr>
                         <td colspan="8" class="text-center">
                             Aucun utilisateur trouvé.
                         </td>

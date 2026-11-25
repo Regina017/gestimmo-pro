@@ -9,14 +9,12 @@ class Societe extends Model
     protected $table = 'societes';
 
     protected $fillable = [
-
         'nom',
         'telephone',
         'email',
         'adresse',
         'ville',
         'logo',
-
     ];
 
     protected $casts = [

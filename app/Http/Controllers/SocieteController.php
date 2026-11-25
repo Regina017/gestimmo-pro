@@ -4,13 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Societe;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class SocieteController extends Controller
 {
-    /**
-     * Affichage des paramètres société
-     */
     public function edit()
     {
         $societe = Societe::first();
@@ -33,9 +29,6 @@ class SocieteController extends Controller
         );
     }
 
-    /**
-     * Mise à jour des paramètres société
-     */
     public function update(Request $request)
     {
         $request->validate([
@@ -61,20 +54,37 @@ class SocieteController extends Controller
 
         if ($request->hasFile('logo')) {
 
-            if (
-                $societe->logo &&
-                Storage::disk('public')->exists($societe->logo)
-            ) {
-                Storage::disk('public')->delete(
-                    $societe->logo
+            $file = $request->file('logo');
+
+            $filename =
+                time() .
+                '_' .
+                preg_replace(
+                    '/[^A-Za-z0-9.\-_]/',
+                    '',
+                    $file->getClientOriginalName()
+                );
+
+            $destination = public_path(
+                'storage/logos'
+            );
+
+            if (!file_exists($destination)) {
+
+                mkdir(
+                    $destination,
+                    0755,
+                    true
                 );
             }
 
-            $path = $request
-                ->file('logo')
-                ->store('logos', 'public');
+            $file->move(
+                $destination,
+                $filename
+            );
 
-            $societe->logo = $path;
+            $societe->logo =
+                'logos/' . $filename;
         }
 
         $societe->save();
