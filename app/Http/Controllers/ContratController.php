@@ -53,22 +53,22 @@ class ContratController extends Controller
     {
         $request->validate([
             'locataire_id' => 'required|exists:locataires,id',
-            'logement_id'  => 'required|exists:logements,id',
-            'date_debut'   => 'required|date',
-            'date_fin'     => 'required|date|after_or_equal:date_debut',
-            'loyer'        => 'required|numeric|min:0',
-            'caution'      => 'nullable|numeric|min:0',
-            'statut'       => 'required',
+            'logement_id' => 'required|exists:logements,id',
+            'date_debut' => 'required|date',
+            'date_fin' => 'required|date|after_or_equal:date_debut',
+            'loyer' => 'required|numeric|min:0',
+            'caution' => 'nullable|numeric|min:0',
+            'statut' => 'required',
         ]);
 
         Contrat::create([
             'locataire_id' => $request->locataire_id,
-            'logement_id'  => $request->logement_id,
-            'date_debut'   => $request->date_debut,
-            'date_fin'     => $request->date_fin,
-            'loyer'        => $request->loyer,
-            'caution'      => $request->caution ?? 0,
-            'statut'       => $request->statut ?? 'Actif',
+            'logement_id' => $request->logement_id,
+            'date_debut' => $request->date_debut,
+            'date_fin' => $request->date_fin,
+            'loyer' => $request->loyer,
+            'caution' => $request->caution ?? 0,
+            'statut' => $request->statut ?? 'Actif',
         ]);
 
         return redirect()
@@ -120,26 +120,25 @@ class ContratController extends Controller
     public function update(
         Request $request,
         Contrat $contrat
-    )
-    {
+    ) {
         $request->validate([
             'locataire_id' => 'required|exists:locataires,id',
-            'logement_id'  => 'required|exists:logements,id',
-            'date_debut'   => 'required|date',
-            'date_fin'     => 'required|date|after_or_equal:date_debut',
-            'loyer'        => 'required|numeric|min:0',
-            'caution'      => 'nullable|numeric|min:0',
-            'statut'       => 'required',
+            'logement_id' => 'required|exists:logements,id',
+            'date_debut' => 'required|date',
+            'date_fin' => 'required|date|after_or_equal:date_debut',
+            'loyer' => 'required|numeric|min:0',
+            'caution' => 'nullable|numeric|min:0',
+            'statut' => 'required',
         ]);
 
         $contrat->update([
             'locataire_id' => $request->locataire_id,
-            'logement_id'  => $request->logement_id,
-            'date_debut'   => $request->date_debut,
-            'date_fin'     => $request->date_fin,
-            'loyer'        => $request->loyer,
-            'caution'      => $request->caution ?? 0,
-            'statut'       => $request->statut,
+            'logement_id' => $request->logement_id,
+            'date_debut' => $request->date_debut,
+            'date_fin' => $request->date_fin,
+            'loyer' => $request->loyer,
+            'caution' => $request->caution ?? 0,
+            'statut' => $request->statut,
         ]);
 
         return redirect()
@@ -180,60 +179,61 @@ class ContratController extends Controller
     /**
      * PDF du contrat
      */
- public function pdf(Contrat $contrat)
-{
-    $contrat->load([
-        'locataire',
-        'logement'
-    ]);
+    public function pdf(Contrat $contrat)
+    {
+        $contrat->load([
+            'locataire',
+            'logement'
+        ]);
 
-    $logoBase64 = $this->getLogoBase64();
+        $logoBase64 = $this->getLogoBase64();
 
-    $pdf = Pdf::loadView(
-        'contrats.pdf',
-        compact(
-            'contrat',
-            'logoBase64'
-        )
-    );
-
-    $pdf->setPaper(
-        'A4',
-        'portrait'
-    );
-
-    return $pdf->stream(
-        'Contrat-' . $contrat->id . '.pdf'
-    );
-}
-
-private function getLogoBase64()
-{
-    $societe = \App\Models\Societe::first();
-
-    if (!$societe || empty($societe->logo)) {
-        return null;
-    }
-
-    $path = public_path(
-        'storage/' . $societe->logo
-    );
-
-    if (!file_exists($path)) {
-        return null;
-    }
-
-    $extension = strtolower(
-        pathinfo(
-            $path,
-            PATHINFO_EXTENSION
-        )
-    );
-
-    return 'data:image/' .
-        $extension .
-        ';base64,' .
-        base64_encode(
-            file_get_contents($path)
+        $pdf = Pdf::loadView(
+            'contrats.pdf',
+            compact(
+                'contrat',
+                'logoBase64'
+            )
         );
+
+        $pdf->setPaper(
+            'A4',
+            'portrait'
+        );
+
+        return $pdf->stream(
+            'Contrat-' . $contrat->id . '.pdf'
+        );
+    }
+
+    private function getLogoBase64()
+    {
+        $societe = \App\Models\Societe::first();
+
+        if (!$societe || empty($societe->logo)) {
+            return null;
+        }
+
+        $path = public_path(
+            'storage/' . $societe->logo
+        );
+
+        if (!file_exists($path)) {
+            return null;
+        }
+
+        $extension = strtolower(
+            pathinfo(
+                $path,
+                PATHINFO_EXTENSION
+            )
+        );
+
+        return 'data:image/' .
+            $extension .
+            ';base64,' .
+            base64_encode(
+                file_get_contents($path)
+            );
+    }
 }
