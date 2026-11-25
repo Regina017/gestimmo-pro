@@ -3,20 +3,21 @@
 namespace App\Exports;
 
 use App\Models\Depense;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class DepensesExport implements FromCollection, WithHeadings
 {
-    public function collection()
+    public function collection(): Collection
     {
-        return Depense::all([
+        return Depense::select(
             'id',
             'libelle',
             'montant',
             'date_depense',
             'created_at'
-        ]);
+        )->get();
     }
 
     public function headings(): array
@@ -26,7 +27,7 @@ class DepensesExport implements FromCollection, WithHeadings
             'Libellé',
             'Montant',
             'Date dépense',
-            'Créé le'
+            'Créé le',
         ];
     }
 }
