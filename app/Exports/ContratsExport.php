@@ -3,17 +3,20 @@
 namespace App\Exports;
 
 use App\Models\Contrat;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class ContratsExport implements FromCollection, WithHeadings
 {
-    public function collection()
+    public function collection(): Collection
     {
         return Contrat::with([
             'locataire',
-            'logement'
-        ])->get()->map(function ($contrat) {
+            'logement',
+        ])
+        ->get()
+        ->map(function ($contrat) {
 
             return [
 
@@ -30,7 +33,7 @@ class ContratsExport implements FromCollection, WithHeadings
 
                 $contrat->date_fin,
 
-                $contrat->statut
+                $contrat->statut,
 
             ];
         });
@@ -45,7 +48,7 @@ class ContratsExport implements FromCollection, WithHeadings
             'Loyer',
             'Date début',
             'Date fin',
-            'Statut'
+            'Statut',
         ];
     }
 }
