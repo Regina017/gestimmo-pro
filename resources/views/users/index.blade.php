@@ -5,16 +5,13 @@
 <div class="container-fluid">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-
         <h2 class="fw-bold">
             Gestion des utilisateurs
         </h2>
 
-        <a href="{{ route('users.create') }}"
-           class="btn btn-primary">
+        <a href="{{ route('users.create') }}" class="btn btn-primary">
             + Nouvel utilisateur
         </a>
-
     </div>
 
     @if(session('success'))
@@ -30,157 +27,139 @@
     @endif
 
     <div class="card shadow border-0">
-
         <div class="card-body table-responsive">
 
             <table class="table table-hover align-middle">
 
                 <thead class="table-dark">
-
-                <tr>
-                    <th>ID</th>
-                    <th>Nom</th>
-                    <th>Identifiant</th>
-                    <th>Email</th>
-                    <th>Téléphone</th>
-                    <th>Rôle</th>
-                    <th>Statut</th>
-                    <th width="280">Actions</th>
-                </tr>
-
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Identifiant</th>
+                        <th>Email</th>
+                        <th>Téléphone</th>
+                        <th>Rôle</th>
+                        <th>Statut</th>
+                        <th width="280">Actions</th>
+                    </tr>
                 </thead>
 
                 <tbody>
 
-                @forelse($users as $user)
+                    @forelse($users as $user)
 
- <tr>
+                    <tr>
+                        <td>{{ $user->id }}</td>
 
-    <td>{{ $user->id }}</td>
+                        <td>{{ $user->name }}</td>
 
-    <td>{{ $user->name }}</td>
+                        <td>{{ $user->identifiant }}</td>
 
-    <td>{{ $user->identifiant }}</td>
+                        <td>{{ $user->email }}</td>
 
-    <td>{{ $user->email }}</td>
+                        <td>{{ $user->telephone }}</td>
 
-    <td>{{ $user->telephone }}</td>
+                        <td>
+                            @if($user->role == 'Administrateur')
+                                <span class="badge bg-danger">
+                                    Administrateur
+                                </span>
+                            @elseif($user->role == 'Utilisateur')
+                                <span class="badge bg-primary">
+                                    Utilisateur
+                                </span>
+                            @else
+                                <span class="badge bg-secondary">
+                                    Consultation
+                                </span>
+                            @endif
+                        </td>
 
-    <td>
+                        <td>
+                            @if($user->statut == 'Actif')
+                                <span class="badge bg-success">
+                                    Actif
+                                </span>
+                            @else
+                                <span class="badge bg-danger">
+                                    Bloqué
+                                </span>
+                            @endif
+                        </td>
 
-        @if($user->role == 'Administrateur')
+                        <td>
 
-            <span class="badge bg-danger">
-                Administrateur
-            </span>
+                            <a href="{{ route('users.show', $user) }}"
+                               class="btn btn-info btn-sm">
+                                Voir
+                            </a>
 
-        @elseif($user->role == 'Utilisateur')
+                            <a href="{{ route('users.edit', $user) }}"
+                               class="btn btn-warning btn-sm">
+                                Modifier
+                            </a>
 
-            <span class="badge bg-primary">
-                Utilisateur
-            </span>
+                            @if($user->statut == 'Actif')
 
-        @else
+                                <form action="{{ route('users.bloquer', $user) }}"
+                                      method="POST"
+                                      class="d-inline">
 
-            <span class="badge bg-secondary">
-                Consultation
-            </span>
+                                    @csrf
+                                    @method('PUT')
 
-        @endif
+                                    <button type="submit"
+                                            class="btn btn-secondary btn-sm">
+                                        Bloquer
+                                    </button>
 
-    </td>
+                                </form>
 
-    <td>
+                            @else
 
-        @if($user->statut == 'Actif')
+                                <form action="{{ route('users.debloquer', $user) }}"
+                                      method="POST"
+                                      class="d-inline">
 
-            <span class="badge bg-success">
-                Actif
-            </span>
+                                    @csrf
+                                    @method('PUT')
 
-        @else
+                                    <button type="submit"
+                                            class="btn btn-success btn-sm">
+                                        Débloquer
+                                    </button>
 
-            <span class="badge bg-danger">
-                Bloqué
-            </span>
+                                </form>
 
-        @endif
+                            @endif
 
-    </td>
+                            <form action="{{ route('users.destroy', $user) }}"
+                                  method="POST"
+                                  class="d-inline">
 
-    <td>
+                                @csrf
+                                @method('DELETE')
 
-        <a href="{{ route('users.show', $user) }}"
-           class="btn btn-info btn-sm">
-            Voir
-        </a>
+                                <button type="submit"
+                                        class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Supprimer cet utilisateur ?')">
+                                    Supprimer
+                                </button>
 
-        <a href="{{ route('users.edit',$user) }}"
-           class="btn btn-warning btn-sm">
-            Modifier
-        </a>
+                            </form>
 
-        @if($user->statut == 'Actif')
+                        </td>
+                    </tr>
 
-            <form
-                action="{{ route('users.bloquer',$user) }}"
-                method="POST"
-                class="d-inline">
+                    @empty
 
-                @csrf
-                @method('PUT')
-
-                <button class="btn btn-secondary btn-sm">
-                    Bloquer
-                </button>
-
-            </form>
-
-        @else
-
-            <form
-                action="{{ route('users.debloquer',$user) }}"
-                method="POST"
-                class="d-inline">
-
-                @csrf
-                @method('PUT')
-
-                <button class="btn btn-success btn-sm">
-                    Débloquer
-                </button>
-
-            </form>
-
-        @endif
-
-        <form
-            action="{{ route('users.destroy',$user) }}"
-            method="POST"
-            class="d-inline">
-
-            @csrf
-            @method('DELETE')
-
-            <button
-                onclick="return confirm('Supprimer cet utilisateur ?')"
-                class="btn btn-danger btn-sm">
-
-                Supprimer
-
-            </button>
-
-        </form>
-
-    </td>
-
-</tr>
+                    <tr>
                         <td colspan="8" class="text-center">
                             Aucun utilisateur trouvé.
                         </td>
                     </tr>
 
-                @endforelse
+                    @endforelse
 
                 </tbody>
 
@@ -189,7 +168,6 @@
             {{ $users->links() }}
 
         </div>
-
     </div>
 
 </div>

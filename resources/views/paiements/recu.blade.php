@@ -2,252 +2,234 @@
 <html lang="fr">
 
 <head>
-
     <meta charset="UTF-8">
-
     <title>Reçu de paiement</title>
 
     <style>
-
-        body{
+        body {
             font-family: DejaVu Sans, sans-serif;
-            font-size:12px;
-            color:#333;
-            margin:30px;
+            font-size: 12px;
+            color: #333;
+            margin: 30px;
         }
 
-        .header{
-            text-align:center;
-            margin-bottom:20px;
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
         }
 
-        .header img{
-            width:110px;
+        .logo {
+            width: 110px;
+            height: auto;
         }
 
-        .societe{
-            margin-top:10px;
+        .societe {
+            margin-top: 10px;
         }
 
-        .titre{
-            text-align:center;
-            font-size:24px;
-            font-weight:bold;
-            color:#198754;
-            margin:25px 0;
+        .titre {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #198754;
+            margin: 25px 0;
         }
 
-        .numero{
-            text-align:right;
-            margin-bottom:20px;
-            font-weight:bold;
+        .numero {
+            text-align: right;
+            margin-bottom: 20px;
+            font-weight: bold;
         }
 
-        table{
-            width:100%;
-            border-collapse:collapse;
-            margin-top:15px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
         }
 
-        th{
-            background:#f5f5f5;
-            border:1px solid #ddd;
-            padding:10px;
-            text-align:left;
-            width:35%;
+        th {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            width: 35%;
         }
 
-        td{
-            border:1px solid #ddd;
-            padding:10px;
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
         }
 
-        .signature{
-            margin-top:70px;
-            width:100%;
+        .signature {
+            margin-top: 70px;
+            width: 100%;
         }
 
-        .signature td{
-            border:none;
-            text-align:center;
-            padding-top:60px;
+        .signature td {
+            border: none;
+            text-align: center;
+            padding-top: 60px;
         }
 
-        .footer{
-            margin-top:50px;
-            text-align:center;
-            font-size:10px;
-            color:#777;
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 10px;
+            color: #777;
         }
 
-        .success{
-            color:#198754;
-            font-weight:bold;
+        .success {
+            color: #198754;
+            font-weight: bold;
         }
-
     </style>
-
 </head>
 
 <body>
 
-@php
-    $societe = \App\Models\Societe::first();
-@endphp
+    @php
+        $societe = \App\Models\Societe::first();
+    @endphp
 
-<div class="header">
+    <div class="header">
 
-    @if($societe && $societe->logo)
+        @if(!empty($logoBase64))
+            <img
+                src="{{ $logoBase64 }}"
+                alt="Logo Société"
+                class="logo">
+        @endif
 
-        <img
-            src="{{ public_path('storage/'.$societe->logo) }}"
-            alt="Logo">
+        <div class="societe">
 
-    @endif
+            <h2>
+                {{ $societe->nom ?? 'GESTIMMO-PRO' }}
+            </h2>
 
-    <div class="societe">
+            @if(!empty($societe?->adresse))
+                <div>{{ $societe->adresse }}</div>
+            @endif
 
-        <h2>
-            {{ $societe->nom ?? 'GESTIMMO-PRO' }}
-        </h2>
+            @if(!empty($societe?->ville))
+                <div>{{ $societe->ville }}</div>
+            @endif
 
-        <div>
-            {{ $societe->adresse ?? '' }}
-        </div>
+            @if(!empty($societe?->telephone))
+                <div>{{ $societe->telephone }}</div>
+            @endif
 
-        <div>
-            {{ $societe->ville ?? '' }}
-        </div>
+            @if(!empty($societe?->email))
+                <div>{{ $societe->email }}</div>
+            @endif
 
-        <div>
-            {{ $societe->telephone ?? '' }}
-        </div>
-
-        <div>
-            {{ $societe->email ?? '' }}
         </div>
 
     </div>
 
-</div>
+    <hr>
 
-<hr>
+    <div class="titre">
+        REÇU DE PAIEMENT
+    </div>
 
-<div class="titre">
+    <div class="numero">
+        N° REC-{{ str_pad($paiement->id, 6, '0', STR_PAD_LEFT) }}
+    </div>
 
-    REÇU DE PAIEMENT
+    <table>
 
-</div>
+        <tr>
+            <th>Référence</th>
+            <td>
+                REC-{{ str_pad($paiement->id, 6, '0', STR_PAD_LEFT) }}
+            </td>
+        </tr>
 
-<div class="numero">
+        <tr>
+            <th>Locataire</th>
+            <td>
+                {{ $paiement->contrat->locataire->nom ?? '' }}
+                {{ $paiement->contrat->locataire->prenom ?? '' }}
+            </td>
+        </tr>
 
-    N° REC-{{ str_pad($paiement->id, 6, '0', STR_PAD_LEFT) }}
+        <tr>
+            <th>Logement</th>
+            <td>
+                {{ $paiement->contrat->logement->numero ?? '' }}
+            </td>
+        </tr>
 
-</div>
+        <tr>
+            <th>Date du paiement</th>
+            <td>
+                {{ \Carbon\Carbon::parse($paiement->date_paiement)->format('d/m/Y') }}
+            </td>
+        </tr>
 
-<table>
+        <tr>
+            <th>Montant payé</th>
+            <td>
+                {{ number_format($paiement->montant ?? 0, 2, ',', ' ') }} $
+            </td>
+        </tr>
 
-    <tr>
-        <th>Référence</th>
-        <td>
-            REC-{{ str_pad($paiement->id, 6, '0', STR_PAD_LEFT) }}
-        </td>
-    </tr>
+        <tr>
+            <th>Mode de paiement</th>
+            <td>
+                {{ $paiement->mode_paiement ?? 'Non défini' }}
+            </td>
+        </tr>
 
-    <tr>
-        <th>Locataire</th>
-        <td>
-            {{ $paiement->contrat->locataire->nom ?? '' }}
-            {{ $paiement->contrat->locataire->prenom ?? '' }}
-        </td>
-    </tr>
+        <tr>
+            <th>Statut</th>
+            <td class="success">
+                Paiement reçu
+            </td>
+        </tr>
 
-    <tr>
-        <th>Logement</th>
-        <td>
-            {{ $paiement->contrat->logement->numero ?? '' }}
-        </td>
-    </tr>
+    </table>
 
-    <tr>
-        <th>Date du paiement</th>
-        <td>
-            {{ $paiement->date_paiement ?? '' }}
-        </td>
-    </tr>
+    <div style="margin-top:30px; line-height:1.8;">
 
-    <tr>
-        <th>Montant payé</th>
-        <td>
-            {{ number_format($paiement->montant ?? 0, 2, ',', ' ') }} $
-        </td>
-    </tr>
+        Nous confirmons avoir reçu le paiement mentionné ci-dessus.
 
-    <tr>
-        <th>Mode de paiement</th>
-        <td>
-            {{ $paiement->mode_paiement ?? 'Non défini' }}
-        </td>
-    </tr>
+        <br><br>
 
-    <tr>
-        <th>Statut</th>
-        <td class="success">
-            Paiement reçu
-        </td>
-    </tr>
+        Le présent reçu est délivré au locataire pour servir et valoir ce que de droit.
 
-</table>
+    </div>
 
-<div style="margin-top:30px; line-height:1.8;">
+    <table class="signature">
 
-    Nous confirmons avoir reçu le paiement mentionné ci-dessus.
+        <tr>
 
-    <br><br>
+            <td>
+                ____________________________
+                <br><br>
+                Signature du gestionnaire
+            </td>
 
-    Le présent reçu est délivré au locataire pour servir et valoir ce que de droit.
+            <td>
+                ____________________________
+                <br><br>
+                Signature du locataire
+            </td>
 
-</div>
+        </tr>
 
-<table class="signature">
+    </table>
 
-    <tr>
+    <div class="footer">
 
-        <td>
+        Document généré automatiquement par GESTIMMO‑PRO
 
-            ____________________________
+        <br>
 
-            <br><br>
+        Date d'impression :
+        {{ now()->format('d/m/Y H:i') }}
 
-            Signature du gestionnaire
-
-        </td>
-
-        <td>
-
-            ____________________________
-
-            <br><br>
-
-            Signature du locataire
-
-        </td>
-
-    </tr>
-
-</table>
-
-<div class="footer">
-
-    Document généré automatiquement par GESTIMMO‑PRO
-
-    <br>
-
-    Date d'impression :
-    {{ now()->format('d/m/Y H:i') }}
-
-</div>
+    </div>
 
 </body>
-
 </html>

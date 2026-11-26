@@ -157,13 +157,16 @@
     @if($societe && !empty($societe->logo))
 
         <img
-            src="{{ url('/storage/' . $societe->logo) }}"
-            alt="Logo"
+            src="{{ asset('storage/' . $societe->logo) }}"
+            alt="Logo Société"
             style="
-                max-height:70px;
+                max-height:120px;
+                max-width:180px;
                 width:auto;
+                height:auto;
                 display:block;
-                margin:0 auto 10px auto;
+                margin:0 auto 12px auto;
+                object-fit:contain;
             ">
 
     @endif

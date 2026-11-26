@@ -27,15 +27,11 @@ class RapportController extends Controller
     public function biensPdf()
     {
         $biens = Bien::all();
-$logoBase64 = $this->getLogoBase64();
 
-$pdf = Pdf::loadView(
-    'rapports.locataires_pdf',
-    compact(
-        'locataires',
-        'logoBase64'
-    )
-);
+        $pdf = Pdf::loadView(
+            'rapports.biens_pdf',
+            compact('biens')
+        );
 
         return $pdf->download('rapport_biens.pdf');
     }
@@ -52,10 +48,20 @@ $pdf = Pdf::loadView(
         return $pdf->download('rapport_locataires.pdf');
     }
 
-   public function contratsPdf()
-{
-    die('TEST RAPPORT CONTROLLER');
-}
+    public function contratsPdf()
+    {
+        $contrats = Contrat::with([
+            'locataire',
+            'logement'
+        ])->get();
+
+        $pdf = Pdf::loadView(
+            'rapports.contrats_pdf',
+            compact('contrats')
+        );
+
+        return $pdf->download('rapport_contrats.pdf');
+    }
 
     public function occupationsPdf()
     {

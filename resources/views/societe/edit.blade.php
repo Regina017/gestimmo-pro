@@ -171,50 +171,50 @@
 
                 </div>
 
-                @if(!empty($societe->logo))
+    @if(!empty($societe->logo))
 
-                    <div class="mb-4">
+<div class="mb-4">
 
-                        <label class="form-label">
-                            Logo actuel
-                        </label>
+    <label class="form-label">
+        Logo actuel
+    </label>
 
-                        <br>
+    <br>
 
-                        <img
-                            src="{{ asset('storage/'.$societe->logo) }}"
-                            alt="Logo"
-                            style="
-                                max-width:250px;
-                                max-height:250px;
-                                border:1px solid #ddd;
-                                background:#fff;
-                                padding:10px;
-                            ">
+    <img
+        src="{{ asset('storage/' . $societe->logo) }}"
+        alt="Logo"
+        style="
+            max-width:250px;
+            max-height:250px;
+            border:1px solid #ddd;
+            background:#fff;
+            padding:10px;
+            object-fit:contain;
+        ">
 
-                        <div class="mt-3">
+    <div class="mt-3">
 
-                            <a href="{{ asset('storage/'.$societe->logo) }}"
-                               target="_blank"
-                               class="btn btn-outline-primary btn-sm">
+        <a
+            href="{{ asset('storage/' . $societe->logo) }}"
+            target="_blank"
+            class="btn btn-outline-primary btn-sm">
 
-                                Tester le logo
+            Tester le logo
 
-                            </a>
+        </a>
 
-                        </div>
+    </div>
 
-                    </div>
+</div>
 
-                @else
+@else
 
-                    <div class="alert alert-warning">
+<div class="alert alert-warning">
+    Aucun logo enregistré.
+</div>
 
-                        Aucun logo enregistré.
-
-                    </div>
-
-                @endif
+@endif
 
                 <div class="text-end">
 
