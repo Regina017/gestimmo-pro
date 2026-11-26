@@ -148,106 +148,87 @@
 
 <div class="sidebar">
 
-@php
-    $societe = \App\Models\Societe::first();
-@endphp
+    @php
+        $societe = \App\Models\Societe::first();
+    @endphp
 
-<div class="logo">
+    <div class="logo">
 
-    @if($societe && $societe->logo_url)
+        @if($societe && !empty($societe->logo))
 
-        <img
-            src="{{ $societe->logo_url }}"
-            alt="Logo Société"
-            style="
-                max-height:120px;
-                max-width:180px;
-                width:auto;
-                height:auto;
-                display:block;
-                margin:0 auto 12px auto;
-                object-fit:contain;
-            ">
+            <img
+                src="{{ asset('storage/' . $societe->logo) }}"
+                alt="Logo Société"
+                style="
+                    max-height:120px;
+                    max-width:180px;
+                    width:auto;
+                    height:auto;
+                    display:block;
+                    margin:0 auto 12px auto;
+                    object-fit:contain;
+                ">
 
-    @endif
+        @endif
 
-    <h4>Gestimmo‑Pro</h4>
+        <h4>Gestimmo‑Pro</h4>
 
-</div>
+    </div>
 
-</div>
     <nav class="mt-3">
 
         <a href="{{ route('dashboard') }}"
            class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-
             <i class="fas fa-chart-line"></i>
             Tableau de bord
-
         </a>
 
         <a href="{{ route('immeubles.index') }}"
            class="nav-link {{ request()->routeIs('immeubles.*') ? 'active' : '' }}">
-
             <i class="fas fa-building"></i>
             Immeubles
-
         </a>
 
         <a href="{{ route('logements.index') }}"
            class="nav-link {{ request()->routeIs('logements.*') ? 'active' : '' }}">
-
             <i class="fas fa-door-open"></i>
             Logements
-
         </a>
 
         <a href="{{ route('locataires.index') }}"
            class="nav-link {{ request()->routeIs('locataires.*') ? 'active' : '' }}">
-
             <i class="fas fa-users"></i>
             Locataires
-
         </a>
 
         <a href="{{ route('contrats.index') }}"
            class="nav-link {{ request()->routeIs('contrats.*') ? 'active' : '' }}">
-
             <i class="fas fa-file-signature"></i>
             Contrats
-
         </a>
 
         <a href="{{ route('paiements.index') }}"
            class="nav-link {{ request()->routeIs('paiements.*') ? 'active' : '' }}">
-
             <i class="fas fa-money-bill-wave"></i>
             Paiements
-
         </a>
 
         <a href="{{ route('depenses.index') }}"
            class="nav-link {{ request()->routeIs('depenses.*') ? 'active' : '' }}">
-
             <i class="fas fa-receipt"></i>
             Dépenses
-
         </a>
 
         <a href="{{ route('rapports.index') }}"
            class="nav-link {{ request()->routeIs('rapports.*') ? 'active' : '' }}">
-
             <i class="fas fa-chart-pie"></i>
             Rapports
-
         </a>
 
         <a href="{{ route('societe.edit') }}"
            class="nav-link {{ request()->routeIs('societe.*') ? 'active' : '' }}">
-
             <i class="fas fa-gear"></i>
             Paramètres
-
         </a>
 
         @auth
@@ -256,10 +237,8 @@
 
                 <a href="{{ route('users.index') }}"
                    class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
-
                     <i class="fas fa-users-cog"></i>
                     Utilisateurs
-
                 </a>
 
             @endif
@@ -267,6 +246,8 @@
         @endauth
 
     </nav>
+
+</div>
 
 </div>
 
