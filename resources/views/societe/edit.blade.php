@@ -182,27 +182,25 @@
     <br>
 
     <img
-        src="{{ asset('storage/' . $societe->logo) }}"
-        alt="Logo"
-        style="
-            max-width:250px;
-            max-height:250px;
-            border:1px solid #ddd;
-            background:#fff;
-            padding:10px;
-            object-fit:contain;
-        ">
+    src="{{ $societe->logo_url }}"
+    alt="Logo"
+    style="
+        max-width:250px;
+        max-height:250px;
+        border:1px solid #ddd;
+        background:#fff;
+        padding:10px;
+        object-fit:contain;
+    ">
 
     <div class="mt-3">
 
-        <a
-            href="{{ asset('storage/' . $societe->logo) }}"
-            target="_blank"
-            class="btn btn-outline-primary btn-sm">
-
-            Tester le logo
-
-        </a>
+       <a
+    href="{{ $societe->logo_url }}"
+    target="_blank"
+    class="btn btn-outline-primary btn-sm">
+    Tester le logo
+</a>
 
     </div>
 

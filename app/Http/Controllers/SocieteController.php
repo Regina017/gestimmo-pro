@@ -45,26 +45,40 @@ class SocieteController extends Controller
         $societe->adresse = $request->adresse;
         $societe->ville = $request->ville;
 
-        if ($request->hasFile('logo')) {
+if ($request->hasFile('logo')) {
 
-            if (!empty($societe->logo)) {
-                Storage::disk('public')->delete($societe->logo);
-            }
+    if (!empty($societe->logo)) {
 
-            $path = $request
-                ->file('logo')
-                ->store('logos', 'public');
+        $ancienLogo = public_path(
+            'storage/' . $societe->logo
+        );
 
-            $societe->logo = $path;
+        if (file_exists($ancienLogo)) {
+            @unlink($ancienLogo);
         }
-
-        $societe->save();
-
-        return redirect()
-            ->route('societe.edit')
-            ->with(
-                'success',
-                'Paramètres société enregistrés avec succès.'
-            );
     }
+
+    $file = $request->file('logo');
+
+    $filename = time() . '_' .
+        preg_replace(
+            '/[^A-Za-z0-9.\-_]/',
+            '',
+            $file->getClientOriginalName()
+        );
+
+    $destination = public_path(
+        'storage/logos'
+    );
+
+    if (!file_exists($destination)) {
+        mkdir($destination, 0755, true);
+    }
+
+    $file->move(
+        $destination,
+        $filename
+    );
+
+    $societe->logo = 'logos/' . $filename;
 }
