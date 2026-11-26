@@ -18,7 +18,15 @@ class RoleMiddleware
             abort(403);
         }
 
-        if (auth()->user()->role !== $role) {
+        $userRole = strtolower(
+            trim(auth()->user()->role)
+        );
+
+        $requiredRole = strtolower(
+            trim($role)
+        );
+
+        if ($userRole !== $requiredRole) {
             abort(403, 'Accès refusé');
         }
 
