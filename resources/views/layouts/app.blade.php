@@ -156,23 +156,24 @@
 
     @if($societe && $societe->logo_url)
 
-<img
-    src="{{ $societe->logo_url }}"
-    alt="Logo Société"
-    style="
-        max-height:120px;
-        max-width:180px;
-        width:auto;
-        height:auto;
-        display:block;
-        margin:0 auto 12px auto;
-        object-fit:contain;
-    ">
+        <img
+            src="{{ $societe->logo_url }}"
+            alt="Logo Société"
+            style="
+                max-height:120px;
+                max-width:180px;
+                width:auto;
+                height:auto;
+                display:block;
+                margin:0 auto 12px auto;
+                object-fit:contain;
+            ">
 
-@endif
     @endif
 
     <h4>Gestimmo‑Pro</h4>
+
+</div>
 
 </div>
     <nav class="mt-3">
