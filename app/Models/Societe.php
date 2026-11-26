@@ -25,13 +25,12 @@ class Societe extends Model
     /**
      * URL complète du logo
      */
-public function getLogoUrlAttribute(): ?string
-{
-    if (empty($this->logo)) {
-        return null;
-    }
+    public function getLogoUrlAttribute(): ?string
+    {
+        if (empty($this->logo)) {
+            return null;
+        }
 
-    return asset(
-        'storage/' . $this->logo
-    );
+        return asset('storage/' . $this->logo);
+    }
 }
