@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Societe;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class SocieteController extends Controller
 {
@@ -37,7 +37,11 @@ class SocieteController extends Controller
             'logo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $societe = Societe::first() ?? new Societe();
+        $societe = Societe::first();
+
+        if (!$societe) {
+            $societe = new Societe();
+        }
 
         $societe->nom = $request->nom;
         $societe->telephone = $request->telephone;
@@ -45,40 +49,51 @@ class SocieteController extends Controller
         $societe->adresse = $request->adresse;
         $societe->ville = $request->ville;
 
-if ($request->hasFile('logo')) {
+        if ($request->hasFile('logo')) {
 
-    if (!empty($societe->logo)) {
+            if (!empty($societe->logo)) {
 
-        $ancienLogo = public_path(
-            'storage/' . $societe->logo
-        );
+                $ancienLogo = public_path(
+                    'storage/' . $societe->logo
+                );
 
-        if (file_exists($ancienLogo)) {
-            @unlink($ancienLogo);
+                if (file_exists($ancienLogo)) {
+                    @unlink($ancienLogo);
+                }
+            }
+
+            $file = $request->file('logo');
+
+            $filename = time() . '_' .
+                preg_replace(
+                    '/[^A-Za-z0-9.\-_]/',
+                    '',
+                    $file->getClientOriginalName()
+                );
+
+            $destination = public_path(
+                'storage/logos'
+            );
+
+            if (!file_exists($destination)) {
+                mkdir($destination, 0755, true);
+            }
+
+            $file->move(
+                $destination,
+                $filename
+            );
+
+            $societe->logo = 'logos/' . $filename;
         }
+
+        $societe->save();
+
+        return redirect()
+            ->route('societe.edit')
+            ->with(
+                'success',
+                'Paramètres société enregistrés avec succès.'
+            );
     }
-
-    $file = $request->file('logo');
-
-    $filename = time() . '_' .
-        preg_replace(
-            '/[^A-Za-z0-9.\-_]/',
-            '',
-            $file->getClientOriginalName()
-        );
-
-    $destination = public_path(
-        'storage/logos'
-    );
-
-    if (!file_exists($destination)) {
-        mkdir($destination, 0755, true);
-    }
-
-    $file->move(
-        $destination,
-        $filename
-    );
-
-    $societe->logo = 'logos/' . $filename;
 }
