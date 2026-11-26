@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Immeuble;
 use App\Models\Logement;
 use App\Models\Locataire;
 use App\Models\Contrat;
@@ -18,8 +17,6 @@ class DashboardController extends Controller
         | Statistiques générales
         |--------------------------------------------------------------------------
         */
-
-        $totalImmeubles = Immeuble::count();
 
         $totalBiens = Logement::count();
 
@@ -37,17 +34,6 @@ class DashboardController extends Controller
         )->get();
 
         $totalContrats = $contratsActifs->count();
-
-        /*
-        |--------------------------------------------------------------------------
-        | Logements vacants
-        |--------------------------------------------------------------------------
-        */
-
-        $logementsVacants = max(
-            0,
-            $totalBiens - $totalContrats
-        );
 
         /*
         |--------------------------------------------------------------------------
@@ -130,27 +116,6 @@ class DashboardController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | Contrats expirants
-        |--------------------------------------------------------------------------
-        */
-
-        $contratsExpirantListe = Contrat::whereDate(
-            'date_fin',
-            '<=',
-            now()->addDays(30)
-        )
-        ->whereDate(
-            'date_fin',
-            '>=',
-            now()
-        )
-        ->get();
-
-        $contratsExpirants =
-            $contratsExpirantListe->count();
-
-        /*
-        |--------------------------------------------------------------------------
         | Échéances sous 7 jours
         |--------------------------------------------------------------------------
         */
@@ -206,8 +171,6 @@ class DashboardController extends Controller
 
         $totalNotifications =
             $impayes +
-            $contratsExpirants +
-            $logementsVacants +
             $echeancesLoyer +
             $contratsEnRetard;
 
@@ -247,27 +210,64 @@ class DashboardController extends Controller
             $impayesParMois[] = $nbImpayes;
         }
 
-        return view(
+        /*
+|--------------------------------------------------------------------------
+| Graphique Occupation logements
+|--------------------------------------------------------------------------
+*/
+
+$logementsOccupes = $totalContrats;
+
+$logementsLibres = max(
+    0,
+    $totalBiens - $totalContrats
+);
+
+/*
+|--------------------------------------------------------------------------
+| Graphique Contrats
+|--------------------------------------------------------------------------
+*/
+
+$contratsActifsCount = Contrat::where(
+    'statut',
+    'Actif'
+)->count();
+
+$contratsTerminesCount = Contrat::where(
+    'statut',
+    'Terminé'
+)->count();
+
+$contratsSuspendusCount = Contrat::where(
+    'statut',
+    'Suspendu'
+)->count();
+return view(
             'dashboard.index',
-            compact(
-                'totalImmeubles',
-                'totalBiens',
-                'totalLocataires',
-                'totalContrats',
-                'revenus',
-                'depenses',
-                'benefice',
-                'impayes',
-                'contratsExpirants',
-                'logementsVacants',
-                'totalNotifications',
-                'echeancesLoyer',
-                'contratsEnRetard',
-                'paiementsRecents',
-                'impayesParMois',
-                'loyersAttendus',
-                'contratsExpirantListe'
-            )
+compact(
+    'totalBiens',
+    'totalLocataires',
+    'totalContrats',
+    'revenus',
+    'depenses',
+    'benefice',
+    'impayes',
+    'totalNotifications',
+    'echeancesLoyer',
+    'contratsEnRetard',
+    'paiementsRecents',
+    'impayesParMois',
+    'loyersAttendus',
+
+    'logementsOccupes',
+    'logementsLibres',
+
+    'contratsActifsCount',
+    'contratsTerminesCount',
+    'contratsSuspendusCount'
+)
+
         );
     }
 }

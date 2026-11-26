@@ -21,34 +21,20 @@
             @endif
 
             @if($errors->any())
-
                 <div class="alert alert-danger">
 
                     <ul class="mb-0">
 
                         @foreach($errors->all() as $error)
-
                             <li>{{ $error }}</li>
-
                         @endforeach
 
                     </ul>
 
                 </div>
-
             @endif
 
-            {{-- Vérification URL --}}
-            <div class="alert alert-warning">
-                URL de soumission :
-                {{ route('contrats.store') }}
-            </div>
-
-            <div class="alert alert-warning">
-    URL de soumission :
-    {{ route('contrats.store') }}
-</div>
-<form action="{{ route('contrats.store') }}"
+            <form action="{{ route('contrats.store') }}"
                   method="POST"
                   autocomplete="off">
 
@@ -199,8 +185,7 @@
                                    step="0.01"
                                    name="caution"
                                    class="form-control"
-                                   value="{{ old('caution', 0) }}"
-                                   required>
+                                   value="{{ old('caution', 0) }}">
 
                         </div>
 
@@ -217,15 +202,18 @@
                             <select name="statut"
                                     class="form-select">
 
-                                <option value="Actif" {{ old('statut', 'Actif') == 'Actif' ? 'selected' : '' }}>
+                                <option value="Actif"
+                                    {{ old('statut', 'Actif') == 'Actif' ? 'selected' : '' }}>
                                     Actif
                                 </option>
 
-                                <option value="Terminé" {{ old('statut') == 'Terminé' ? 'selected' : '' }}>
+                                <option value="Terminé"
+                                    {{ old('statut') == 'Terminé' ? 'selected' : '' }}>
                                     Terminé
                                 </option>
 
-                                <option value="Suspendu" {{ old('statut') == 'Suspendu' ? 'selected' : '' }}>
+                                <option value="Suspendu"
+                                    {{ old('statut') == 'Suspendu' ? 'selected' : '' }}>
                                     Suspendu
                                 </option>
 
@@ -239,9 +227,9 @@
 
                 <div class="text-end">
 
-                    <a href="{{ route('contrats.index') }}"
+                    <a href="{{ url()->previous() }}"
                        class="btn btn-secondary">
-                        Retour
+                        ← Retour
                     </a>
 
                     <button type="submit"
